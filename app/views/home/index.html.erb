@@ -1,6 +1,9 @@
-<h1>Home</h1>
-<div>
+<h1>Event Management System</h1>
   <h2>SMP_Event_Management_System</h2>
-  <%= link_to "Signup"%> or
-  <%= link_to "Login" %>
-</div>
+  <%if current_user %>
+      Logged in
+    <%= link_to "Logout",logout_path %>
+  <%else %>
+    <%= link_to "Signup", signup_path%> or
+    <%= link_to "Login",login_path %>
+  <%end %>
