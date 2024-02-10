@@ -11,16 +11,18 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :email, style: "display: block" %>
-    <%= form.text_field :email %>
-  </div>
-
-  <div>
-    <%= form.label :password, style: "display: block" %>
-    <%= form.text_field :password %>
-  </div>
-
+  <% unless current_user.is_admin? %>
+    <div>
+     <%= form.label :email, style: "display: block" %>
+      <%= form.text_field :email %>
+    </div>
+  <% end %>
+  <% unless current_user.is_admin? %>
+    <div>
+      <%= form.label :password, style: "display: block" %>
+      <%= form.text_field :password %>
+    </div>
+  <% end %>
   <div>
     <%= form.label :name, style: "display: block" %>
     <%= form.text_field :name %>

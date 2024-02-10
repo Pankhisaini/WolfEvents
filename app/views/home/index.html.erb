@@ -2,6 +2,7 @@
   <h3>NCSU Event Management System</h3>
   <%if current_user %>
       Logged in
+  <%= link_to 'View profile', profile_path(id: current_user.id) %>
     <%= link_to "Logout",logout_path %>
   <%else %>
     <%= link_to "Signup", signup_path%> or
