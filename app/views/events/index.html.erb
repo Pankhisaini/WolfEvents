@@ -12,7 +12,7 @@
     <% else %>
       <!--      Current time = <%#= Time.current%><br>-->
       <!--      Original time <%#= event.event_start_time%><br>-->
-      <% if (event.event_date > Date.today) || (event.event_date == Date.today && event.event_start_time.strftime("%H:%M:%S") > Time.current.strftime("%H:%M:%S"))%>
+      <% if (event.event_date > Time.now.utc.to_date) || (event.event_date == Time.now.utc.to_date && event.event_start_time.strftime("%H:%M:%S") > Time.current.strftime("%H:%M:%S"))%>
         <%= render event %>
         <p>
           <%= link_to "Show this event", event %>
