@@ -1,14 +1,25 @@
 <p style="color: green"><%= notice %></p>
-
 <h1>Events</h1>
-
 <div id="events">
+  <div><%= current_user.name %></div>
   <% @events.each do |event| %>
-    <%= render event %>
-    <p>
-      <%= link_to "Show this event", event %>
-    </p>
+    <% if current_user.is_admin %>
+      <%= render event %>
+      <p>
+        <%= link_to "Show this event", event %>
+      </p>
+      <%= link_to "New event", new_event_path %>
+    <% else %>
+      <!--      Current time = <%#= Time.current%><br>-->
+      <!--      Original time <%#= event.event_start_time%><br>-->
+      <% if (event.event_date > Date.today) || (event.event_date == Date.today && event.event_start_time.strftime("%H:%M:%S") > Time.current.strftime("%H:%M:%S"))%>
+        <%= render event %>
+        <p>
+          <%= link_to "Show this event", event %>
+        </p>
+      <% else %>
+        <div></div>
+      <% end %>
+    <% end %>
   <% end %>
 </div>
-
-<%= link_to "New event", new_event_path %>
