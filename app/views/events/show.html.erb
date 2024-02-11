@@ -3,6 +3,7 @@
 <%= render @event %>
 
 <div>
+  <%= link_to "Book tickets", tickets_path(@event) %>
   <%= link_to "Edit this event", edit_event_path(@event) %> |
   <%= link_to "Back to events", events_path %>
 
