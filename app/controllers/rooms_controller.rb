@@ -6,6 +6,7 @@ class RoomsController < ApplicationController
     @rooms = Room.all
   end
 
+
   # GET /rooms/1 or /rooms/1.json
   def show
   end
@@ -57,7 +58,62 @@ class RoomsController < ApplicationController
     end
   end
 
+  def available_rooms
+    date = params[:date]
+    start_time = params[:start_time]
+    end_time = params[:end_time]
+
+    start_time = Time.parse(start_time)
+    end_time = Time.parse(end_time)
+    date = Date.parse(date)
+    # Convert date and time strings to DateTime objects for comparison
+    # start_datetime = DateTime.parse("#{date} #{start_time}")
+    # end_datetime = DateTime.parse("#{date} #{end_time}")
+    @available_rooms = []
+    @all_rooms = Room.all
+
+    @all_rooms.each do |room|
+      events = room.events
+      is_room_available = true
+
+      events.each do |event|
+        event_start_time = Time.parse(event.event_start_time.strftime('%H:%M'))
+        event_end_time = Time.parse(event.event_end_time.strftime('%H:%M'))
+        event_date = event.event_date
+        puts event_date
+        puts event_start_time
+        puts event_end_time
+
+        puts date
+        puts start_time
+        puts end_time
+        puts ".............."
+        if (event_date == date && !(start_time >= event_end_time || end_time <= event_start_time))
+          puts "Nai Chalega"
+          is_room_available = false
+          break
+        end
+      end
+      puts is_room_available
+      @available_rooms << room if is_room_available
+    end
+    puts "Available rooms"
+    puts @available_rooms
+    render json: @available_rooms
+  end
+
+
+
   private
+    # Helper method to check if a room is available for the given time slot
+    def room_available?(room, start_datetime, end_datetime)
+    # Check if there are any events booked for the room during the given time slot
+      room.events.none? do |event|
+        event_start_datetime = DateTime.parse("#{event.event_date} #{event.event_start_time}")
+        event_end_datetime = DateTime.parse("#{event.event_date} #{event.event_end_time}")
+        event_start_datetime <= end_datetime && event_end_datetime >= start_datetime
+      end
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_room
       @room = Room.find(params[:id])
