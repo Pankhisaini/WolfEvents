@@ -1,6 +1,7 @@
 
 <%if current_user %>
 
+
   Logged in as <%= current_user.name %>
   <%= link_to "Logout",logout_path %>
   <%= link_to 'View profile', profile_path(id: current_user.id) %>
@@ -8,6 +9,7 @@
   <% unless !current_user.is_admin? %>
   <%= link_to "Add Events",new_event_path %>
     <%end %>
+
 
 <%else %>
   <%= link_to "Signup", signup_path%> or
