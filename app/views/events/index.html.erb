@@ -1,13 +1,18 @@
 <p style="color: green"><%= notice %></p>
-<h1>Events</h1>
+<div style="display: flex; align-items: center;">
+  <h1 style="margin-right: 10px;">Events</h1>
+  <%= link_to "New event", new_event_path, class: "btn btn-primary" %>
+</div>
+
 <div id="events">
+
   <% @events.each do |event| %>
     <% if current_user.is_admin %>
       <%= render event %>
       <p>
         <%= link_to "Show this event", event %>
       </p>
-      <%= link_to "New event", new_event_path %>
+
     <% else %>
       <%event_date = event.event_date %>
       <%current_date = Time.now.utc.to_date  %>
