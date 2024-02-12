@@ -3,9 +3,10 @@
 <%= render @event %>
 
 <div>
-  <%= link_to "Book tickets", tickets_path(@event) %>
+  <%= link_to "Book tickets", new_ticket_path(event_id: @event.id, user_id: current_user.id, room_id: @event.room.id) %>
   <%= link_to "Edit this event", edit_event_path(@event) %> |
   <%= link_to "Back to events", events_path %>
-
+  <% unless !current_user.is_admin? %>
   <%= button_to "Destroy this event", @event, method: :delete %>
+    <%end %>
 </div>

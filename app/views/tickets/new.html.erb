@@ -1,9 +1,21 @@
-<h1>New ticket</h1>
-
-<%= render "form", ticket: @ticket %>
-
-<br>
-
-<div>
-  <%= link_to "Back to tickets", tickets_path %>
-</div>
+<%= form_with(model: @ticket, url: tickets_path, local: true) do |form| %>
+  <div class="field">
+    <strong>Event:</strong> <%= @event.event_name %>
+    <%= form.hidden_field :event_id, value: @event.id %>
+  </div>
+  <div class="field">
+    <strong>User:</strong> <%= current_user.name %>
+    <%= form.hidden_field :user_id, value: current_user.id %>
+  </div>
+  <div class="field">
+    <strong>Room:</strong> <%= @room.room_location %>
+    <%= form.hidden_field :room_id, value: @room.id %>
+  </div>
+  <div class="field">
+    <%= form.label :quantity %>
+    <%= form.number_field :number_of_tickets, min: 1 %>
+  </div>
+  <div class="actions">
+    <%= form.submit "Purchase Tickets" %>
+  </div>
+<% end %>
