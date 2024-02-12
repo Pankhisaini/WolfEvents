@@ -1,18 +1,24 @@
 <p style="color: green"><%= notice %></p>
-<h1>Events</h1>
+<div style="display: flex; align-items: center;">
+  <h1 style="margin-right: 10px;">Events</h1>
+  <%= link_to "New event", new_event_path, class: "btn btn-primary" %>
+</div>
+
 <div id="events">
-  <div><%= current_user.name %></div>
+
   <% @events.each do |event| %>
     <% if current_user.is_admin %>
       <%= render event %>
       <p>
         <%= link_to "Show this event", event %>
       </p>
-      <%= link_to "New event", new_event_path %>
+
     <% else %>
-      <!--      Current time = <%#= Time.current%><br>-->
-      <!--      Original time <%#= event.event_start_time%><br>-->
-      <% if (event.event_date > Time.now.utc.to_date) || (event.event_date == Time.now.utc.to_date && event.event_start_time.strftime("%H:%M:%S") > Time.current.strftime("%H:%M:%S"))%>
+      <%event_date = event.event_date %>
+      <%current_date = Time.now.utc.to_date  %>
+      <%event_time = event.event_start_time.strftime("%H:%M:%S") %>
+      <%current_time = Time.current.strftime("%H:%M:%S") %>
+      <% if (event.number_of_seats_left > 0) && ((event_date > current_date) || (event_date== current_date && event_time > current_time))%>
         <%= render event %>
         <p>
           <%= link_to "Show this event", event %>

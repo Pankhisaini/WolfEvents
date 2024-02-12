@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get 'login', to:"sessions#new", as:'login'
   get 'logout', to:"sessions#destroy",as:'logout'
   get '/users/:id', to:"users#show",as:'profile'
+  get 'available_rooms', to: 'rooms#available_rooms',as:"available_rooms"
   # Defines the root path route ("/")
   # root "posts#index"
 end

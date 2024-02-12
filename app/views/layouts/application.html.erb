@@ -9,9 +9,18 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-
   <body>
+  <h1>Wolf Events</h1>
+  <%if current_user %>
+    Logged in as <%= current_user.name %><br>
+  <%end %>
   <%= yield %>
+  <%if current_user %>
+    <br><br><br><br>
+    <%= link_to "Home",root_url %><br>
+    <%= link_to "Logout",logout_path %><br>
+
+  <%end %>
     <% flash.each do |type, message| %>
     <div class="alert alert-<%= type %>">
       <%= message %>
