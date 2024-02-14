@@ -1,8 +1,8 @@
 
 <%if current_user %>
-
   <%= link_to 'View profile', profile_path(id: current_user.id) %>
   <%= link_to "View Events", events_path %>
+  <%= link_to "View all Attendees", users_path %>
   <% unless !current_user.is_admin? %>
   <%= link_to "Add Events",new_event_path %>
     <%end %>

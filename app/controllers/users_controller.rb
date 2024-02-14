@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
   # GET /users or /users.json
   def index
-    @users = User.all
+    @users = User.where(is_admin: false)
   end
 
   # GET /users/1 or /users/1.json
@@ -31,7 +31,12 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     respond_to do |format|
       if @user.save
-        format.html { redirect_to root_url, notice: "User was successfully created." }
+        if current_user.is_admin
+          format.html { redirect_to users_path, notice: "User was successfully created." }
+        else
+          format.html { redirect_to root_url, notice: "User was successfully created." }
+        end
+
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -46,7 +51,6 @@ class UsersController < ApplicationController
     puts user_params
     respond_to do |format|
       if @user.update(user_params)
-        puts "Chal toh raha hai"
         format.html { redirect_to profile_path, notice: "User was successfully updated." }
         format.json { render :show, status: :ok, location: @user }
       else
