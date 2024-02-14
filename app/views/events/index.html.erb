@@ -1,7 +1,9 @@
 <p style="color: green"><%= notice %></p>
 <div style="display: flex; align-items: center;">
   <h1 style="margin-right: 10px;">Events</h1>
+  <% unless !current_user.is_admin? %>
   <%= link_to "New event", new_event_path, class: "btn btn-primary" %>
+    <%end %>
 </div>
 
 <div id="events">

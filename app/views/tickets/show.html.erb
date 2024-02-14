@@ -5,7 +5,5 @@
 <div>
   <%= link_to "Edit this ticket", edit_ticket_path(@ticket) %> |
   <%= link_to "Show all my tickets", tickets_path %>
-  <% unless !current_user.is_admin? %>
-  <%= button_to "Destroy this ticket", @ticket, method: :delete %>
-    <%end %>
+  <%= button_to "Delete this ticket", @ticket, method: :delete %>
 </div>
