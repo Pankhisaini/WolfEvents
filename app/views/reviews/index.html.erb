@@ -1,14 +1,36 @@
 <p style="color: green"><%= notice %></p>
 
 <h1>Reviews</h1>
+<%= form_with(url: reviews_path, method: :get) do |form| %>
+  <div class="form-group">
+    <%= form.label :user_email, "Filter by email:" %>
+    <%= form.text_field :user_email_search, placeholder: 'Search by user email', class: 'form-control', id: 'user_email_search', value: params[:user_email_search]%>
+  </div>
+  <div class="form-group">
+    <%= form.label :event_name, "Filter by event:" %>
+    <%= form.text_field :event_name_search, placeholder: 'Search by event name', class: 'form-control', id: 'event_name_search', value: params[:event_name_search] %>
 
+  </div>
+  <%= form.submit 'Filter', class: 'btn btn-primary' %>
+<% end %>
+
+<%#= form_with(url: reviews_path, method: :get) do |form| %>
+<!--  <div class="form-group">-->
+    <%#= form.label :event_name, "Filter by event:" %>
+    <%#= form.text_field :event_name_search, placeholder: 'Search by event name', class: 'form-control', id: 'event_name_search', value: params[:event_name_search] %>
+    <%#= form.submit 'Filter', class: 'btn btn-primary' %>
+<!--  </div>-->
+<%# end %>
+
+<%= link_to 'Clear Filter', reviews_path, class: 'btn btn-secondary' %>
 <div id="reviews">
   <% @reviews.each do |review| %>
     <%= render review %>
-    <p>
-      <%= link_to "Show this review", review %>
-    </p>
+    <% if review.user_id == current_user.id %>
+        <p>
+          <%= link_to "Edit this review", edit_review_path(review) %>
+        </p>
+    <% end %>
   <% end %>
 </div>
 
-<%= link_to "New review", new_review_path %>

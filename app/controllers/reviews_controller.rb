@@ -4,14 +4,48 @@ class ReviewsController < ApplicationController
   # GET /reviews or /reviews.json
   def index
     @reviews = Review.all
-  end
 
+    # Filter by user email if user_email_search parameter is present
+    if params[:user_email_search].present?
+      # Use the SQL LIKE operator to find email IDs similar to the search term
+      search_term = "%#{params[:user_email_search]}%"
+      @users = User.where('email LIKE ?', search_term)
+      # Get IDs of matching users
+      user_ids = @users.pluck(:id)
+      # Filter reviews by user IDs
+      @reviews = @reviews.where(user_id: user_ids)
+    end
+
+    if params[:event_name_search].present?
+      event_search_term = "%#{params[:event_name_search]}%"
+      @events = Event.where('event_name LIKE ?', event_search_term)
+      event_ids = @events.pluck(:id)
+
+        # Filter reviews by event IDs
+      @reviews = @reviews.where(event_id: event_ids)
+    end
+
+    # Filter by event name if event_name_search parameter is present
+    # if params[:event_name_search].present?
+    #   search_term = "%#{params[:event_name_search]}%"
+    #   @events = Event.where('event_name LIKE ?', search_term)
+    #   event_ids = @events.pluck(:id)
+    #
+    #   # Filter reviews by event IDs
+    #   @reviews = @reviews.where(event_id: event_ids)
+    # end
+end
+
+  def my_reviews
+    @my_reviews = current_user.reviews
+  end
   # GET /reviews/1 or /reviews/1.json
   def show
   end
 
   # GET /reviews/new
   def new
+    @event = Event.find(params[:event_id])
     @review = Review.new
   end
 
@@ -52,7 +86,7 @@ class ReviewsController < ApplicationController
     @review.destroy!
 
     respond_to do |format|
-      format.html { redirect_to reviews_url, notice: "Review was successfully destroyed." }
+      format.html { redirect_to my_reviews_url, notice: "Review was successfully destroyed." }
       format.json { head :no_content }
     end
   end
