@@ -1,9 +1,23 @@
-<h1>New review</h1>
+<%= form_with(model: @review, url: reviews_path, local: true) do |form| %>
+  <div class="field">
+    <strong>Event:</strong> <%= @event.event_name %>
+    <%= form.hidden_field :event_id, value: @event.id %>
+  </div>
+  <div class="field">
+    <strong>User:</strong> <%= current_user.name %>
+    <%= form.hidden_field :user_id, value: current_user.id %>
+  </div>
+  <div class="field">
+    <strong>Ratings(1-5):</strong>
+    <%= form.number_field :rating, step: 'any' %>
+  </div>
 
-<%= render "form", review: @review %>
+  <div class="field">
+    <strong>Feedback:</strong>
+    <%= form.text_field :feedback %>
+  </div>
 
-<br>
-
-<div>
-  <%= link_to "Back to reviews", reviews_path %>
-</div>
+  <div class="actions">
+    <%= form.submit "Submit review" %>
+  </div>
+<% end %>

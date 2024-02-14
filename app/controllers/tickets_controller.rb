@@ -3,7 +3,34 @@ class TicketsController < ApplicationController
 
   # GET /tickets or /tickets.json
   def index
-    @tickets = Ticket.all
+    # Regular user view (own bookings)
+    @tickets = current_user.tickets.map do |ticket|
+      {
+        event: ticket.event,
+        event_name: ticket.event.event_name
+      }
+    end
+  end
+
+  def my_bookings
+    # Regular user view (own bookings)
+    @tickets = current_user.tickets
+    render :index # Reuse the index view
+  end
+
+  def all_bookings
+    # Admin view (all bookings)
+    if current_user.is_admin?
+      @tickets = Ticket.all
+    else
+      # Regular user view (own bookings)
+      @tickets = current_user.tickets
+    end
+    render :index # Reuse the index view
+  end
+
+  def event_history
+
   end
 
   # GET /tickets/1 or /tickets/1.json

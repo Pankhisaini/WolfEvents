@@ -5,6 +5,7 @@
 <br>
 
 <div>
-  <%= link_to "Show this review", @review %> |
-  <%= link_to "Back to reviews", reviews_path %>
+  <%= button_to "Destroy this review", @review, method: :delete %>
+  <%= link_to "Show this review", @review %> 
+
 </div>

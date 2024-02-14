@@ -5,10 +5,13 @@
 <div id="tickets">
   <% @tickets.each do |ticket| %>
     <%= render ticket %>
-    <p>
+    <% if (ticket.event.event_date < Date.today || (ticket.event.event_date == Date.today && ticket.event.event_end_time < Time.now)) && ticket.event.event_category != 'Miscellaneous'%>
+<p>
+        <%= link_to "Write a review", new_review_path(event_id: ticket.event_id, user_id: current_user.id) %>
+      </p>
+    <% end %>
       <%= link_to "Show this ticket", ticket %>
     </p>
   <% end %>
 </div>
 
-<%= link_to "New ticket", new_ticket_path %>

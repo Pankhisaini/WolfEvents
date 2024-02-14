@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+<div style="display: flex; align-items: center;">
+  <h1 style="margin-right: 10px;">My Reviews</h1>
+</div>
+
+<div id="my_review">
+
+  <% @my_reviews.each do |review| %>
+      <%= render review %>
+      <p>
+        <%= link_to "Edit this review", edit_review_path(review) %>
+      </p>
+  <% end %>
+</div>
