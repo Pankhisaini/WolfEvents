@@ -1,8 +1,40 @@
 <p style="color: green"><%= notice %></p>
 <div style="display: flex; align-items: center;">
   <h1 style="margin-right: 10px;">Events</h1>
-  <%= link_to "New event", new_event_path, class: "btn btn-primary" %>
+  <%if current_user.is_admin? %>
+    <%= link_to "New event", new_event_path, class: "btn btn-primary" %>
+  <%end %>
 </div>
+
+<%= form_tag events_path, method: :get, id: "filterForm" do %>
+  <div style="display: flex; align-items: center;">
+    <div style="margin-right: 10px;">
+      <%= label_tag :name, "Search Name:" %>
+      <%= text_field_tag :name, nil, id: "name" %>
+
+    </div>
+    <div style="margin-right: 10px;">
+      <%= label_tag :category, "Category:" %>
+      <%= select_tag :category, options_for_select([['All', ''], ['Concert', 'Concert'], ['Sport', 'Sport'], ['Arts & Theatre', 'Arts & Theatre'], ['Miscellaneous', 'Miscellaneous']]), id: "category" %>
+    </div>
+
+    <div style="margin-right: 10px;">
+      <%= label_tag :date, "Date:" %>
+      <%= date_field_tag :date, id: "date" %>
+    </div>
+
+    <div style="margin-right: 10px;">
+      <%= label_tag :minPrice, "Min Price:" %>
+      <%= number_field_tag :minPrice, id: "minPrice" %>
+    </div>
+
+    <div style="margin-right: 10px;">
+      <%= label_tag :maxPrice, "Max Price:" %>
+      <%= number_field_tag :maxPrice, id: "maxPrice" %>
+    </div>
+    <%= submit_tag "Filter" %>
+  </div>
+<% end %>
 
 <div id="events">
 
@@ -28,4 +60,54 @@
       <% end %>
     <% end %>
   <% end %>
+
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("filterForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            // Collect filter criteria
+            var category = document.getElementById("category").value;
+            var date = document.getElementById("date").value;
+            var minPrice = document.getElementById("minPrice").value;
+            var maxPrice = document.getElementById("maxPrice").value;
+            var name = document.getElementById("name").value;
+            console.log(category);
+            console.log(date);
+            console.log(minPrice);
+            console.log(maxPrice);
+            console.log(name);
+            // Send AJAX request to fetch filtered events
+            var xhr = new XMLHttpRequest();
+            var url = "<%= events_path %>?category=" + encodeURIComponent(category) + "&date=" + encodeURIComponent(date) + "&min_price=" + encodeURIComponent(minPrice) + "&max_price=" + encodeURIComponent(maxPrice)+ "&name=" + encodeURIComponent(name);
+            xhr.open("GET", url, true);
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var events = JSON.parse(xhr.responseText);
+                    var eventsHTML = "";
+                    // Generate HTML for filtered events
+                    // Generate HTML for filtered events
+                    events.forEach(function(e) {
+                        // Construct HTML for each event
+                        var eventHTML = "<div>" +
+                            "<p>" + e.event_name + "</p>" +
+                            "<p>" + e.event_start_time + "</p>" +
+                            "<p>" + e.ticket_price + "</p>" + // Add ticket price or any other attributes you want to display
+                            "</div>";
+
+                        var linkHTML = "<p>" +
+                            "<a href='/events/" + e.id + "'>Show this event</a>" +
+                            "</p>";
+
+                        eventsHTML += eventHTML + linkHTML;
+                    });
+                    // Update events container with filtered events HTML
+                    document.getElementById("events").innerHTML = eventsHTML;
+                }
+            };
+            xhr.send();
+        });
+    });
+</script>

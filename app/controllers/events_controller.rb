@@ -3,11 +3,38 @@ class EventsController < ApplicationController
 
   # GET /events or /events.json
   def index
+    puts "In Index"
+    puts params
     @events = Event.all
-    @room = Room.find_by_id(1)
-    puts "Hellooo"
-    puts @room.events.size
+    #@room = Room.find_by_id(1)
+    if params[:name].present?
+      @events = @events.where('LOWER(event_name) LIKE ?', "%#{params[:name].downcase}%")
+    end
+    # Filter events based on parameters
+    if params[:category].present?
+      @events = @events.where(event_category: params[:category])
+    end
+
+    if params[:date].present?
+      @events = @events.where(event_date: params[:date])
+    end
+
+    if params[:min_price].present?
+      min_price = params[:min_price].to_i
+      @events = @events.where('ticket_price >= ?', min_price)
+    end
+
+    if params[:max_price].present?
+      min_price = params[:max_price].to_i
+      @events = @events.where('ticket_price <= ?', min_price)
+    end
+    #puts @events[0].event_name
+    respond_to do |format|
+      format.html # Render HTML view
+      format.json { render json: @events } # Render JSON data
+    end
   end
+
 
   # GET /events/1 or /events/1.json
   def show

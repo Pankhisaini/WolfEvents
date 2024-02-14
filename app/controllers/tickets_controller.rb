@@ -55,9 +55,11 @@ class TicketsController < ApplicationController
   def create
 
     @ticket = Ticket.new(ticket_params)
+    @event = Event.find(params[:ticket][:event_id])
     respond_to do |format|
       if @ticket.save
         @ticket.update(confirmation_number: generate_confirmation_number)
+        @event.update(number_of_seats_left: @event.number_of_seats_left - @ticket.number_of_tickets)
         format.html { redirect_to ticket_url(@ticket), notice: "Ticket was successfully created." }
         format.json { render :show, status: :created, location: @ticket }
       else

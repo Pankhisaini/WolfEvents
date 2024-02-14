@@ -4,8 +4,9 @@
 
 <div>
   <%= link_to "Book tickets", new_ticket_path(event_id: @event.id, user_id: current_user.id, room_id: @event.room.id) %>
+  <% unless !current_user.is_admin? %>
   <%= link_to "Edit this event", edit_event_path(@event) %> |
-
+  <%end %>
 
   <%= link_to "Back to events", events_path %>
   <% unless !current_user.is_admin? %>
