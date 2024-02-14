@@ -3,8 +3,12 @@
 <%= render @user %>
 
 <div>
+<<<<<<< HEAD
   <%= link_to "Edit profile", edit_user_path(@user) %> |
   <%= link_to "Back", users_path %>
+=======
+  <%= link_to "Edit profile", edit_user_path(@user) %>
+>>>>>>> main
   <% unless current_user.is_admin? %>
     <%= button_to "Destroy this user", @user, method: :delete %>
   <% end %>
