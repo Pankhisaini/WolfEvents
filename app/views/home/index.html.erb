@@ -1,9 +1,6 @@
 
 <%if current_user %>
 
-
-  Logged in as <%= current_user.name %>
-  <%= link_to "Logout",logout_path %>
   <%= link_to 'View profile', profile_path(id: current_user.id) %>
   <%= link_to "View Events", events_path %>
   <% unless !current_user.is_admin? %>
