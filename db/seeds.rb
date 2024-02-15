@@ -7,5 +7,5 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
-User.create(email: 'admin@gmail.com', password: '12345678',name: 'Admin',phone_number: '+11234567890',address: 'Stovall Dr',credit_card_information: '0000000000000000', is_admin: true)
+User.create(email: 'admin@gmail.com', password: '12345678',name: 'Admin',phone_number: '1234567890',address: 'Stovall Dr',credit_card_information: '0000000000000000', is_admin: true)
 puts 'Admin user created successfully.'

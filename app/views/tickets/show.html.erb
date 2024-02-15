@@ -3,7 +3,9 @@
 <%= render @ticket %>
 
 <div>
-  <%= link_to "Edit this ticket", edit_ticket_path(@ticket) %> |
-  <%= link_to "Show all my tickets", tickets_path %>
+  <%if current_user.is_admin? %>
+    <%= link_to "Edit this ticket", edit_ticket_path(@ticket) %>
+  <%end %>
+  <%= link_to "Show all my tickets", my_bookings_path %>
   <%= button_to "Delete this ticket", @ticket, method: :delete %>
 </div>

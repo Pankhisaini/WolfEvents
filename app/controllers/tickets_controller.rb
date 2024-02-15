@@ -43,7 +43,6 @@ class TicketsController < ApplicationController
     @event = Event.find(params[:event_id])
     #@event
     @room = Room.find_by_id(@event.room_id)
-    #puts @room
     @ticket = Ticket.new
   end
 
@@ -53,12 +52,11 @@ class TicketsController < ApplicationController
 
   # POST /tickets or /tickets.json
   def create
-
     @ticket = Ticket.new(ticket_params)
     @event = Event.find(params[:ticket][:event_id])
+    @ticket.update(confirmation_number: generate_confirmation_number)
     respond_to do |format|
       if @ticket.save
-        @ticket.update(confirmation_number: generate_confirmation_number)
         @event.update(number_of_seats_left: @event.number_of_seats_left - @ticket.number_of_tickets)
         format.html { redirect_to ticket_url(@ticket), notice: "Ticket was successfully created." }
         format.json { render :show, status: :created, location: @ticket }
@@ -85,10 +83,11 @@ class TicketsController < ApplicationController
 
   # DELETE /tickets/1 or /tickets/1.json
   def destroy
+    @event = Event.find_by_id(@ticket.event_id)
+    @event.update(number_of_seats_left: @event.number_of_seats_left + @ticket.number_of_tickets)
     @ticket.destroy!
-
     respond_to do |format|
-      format.html { redirect_to tickets_url, notice: "Ticket was successfully destroyed." }
+      format.html { redirect_to my_bookings_path, notice: "Ticket was successfully destroyed." }
       format.json { head :no_content }
     end
   end

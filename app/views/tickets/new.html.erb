@@ -13,7 +13,6 @@
   </div>
   <div class="field">
     <strong>Credit Card:</strong> <%= current_user.credit_card_information %>
-    <%= form.hidden_field :room_id, value: @room.id %>
   </div>
   <div class="field">
     <strong>Price per Ticket:</strong> <%= number_to_currency(@event.ticket_price) %>
