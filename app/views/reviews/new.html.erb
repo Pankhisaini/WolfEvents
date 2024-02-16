@@ -9,7 +9,7 @@
   </div>
   <div class="field">
     <strong>Ratings(1-5):</strong>
-    <%= form.number_field :rating, step: 'any' %>
+    <%= form.number_field :rating, step: 'any', min: 0, max: 6 %>
   </div>
 
   <div class="field">
