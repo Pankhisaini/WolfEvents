@@ -10,7 +10,7 @@
   <div style="display: flex; align-items: center;">
     <div style="margin-right: 10px;">
       <%= label_tag :name, "Search Name:" %>
-      <%= text_field_tag :name, nil, id: "name" %>
+      <%= text_field_tag :name, nil, id: "name",value: params[:name] %>
 
     </div>
     <div style="margin-right: 10px;">
@@ -20,17 +20,17 @@
 
     <div style="margin-right: 10px;">
       <%= label_tag :date, "Date:" %>
-      <%= date_field_tag :date, id: "date" %>
+      <%= date_field_tag :date, id: "date",value: params[:date] %>
     </div>
 
     <div style="margin-right: 10px;">
       <%= label_tag :minPrice, "Min Price:" %>
-      <%= number_field_tag :minPrice, id: "minPrice" %>
+      <%= number_field_tag :minPrice, id: "minPrice", value: params[:minPrice]%>
     </div>
 
     <div style="margin-right: 10px;">
       <%= label_tag :maxPrice, "Max Price:" %>
-      <%= number_field_tag :maxPrice, id: "maxPrice" %>
+      <%= number_field_tag :maxPrice, id: "maxPrice",value: params[:maxPrice] %>
     </div>
     <%= submit_tag "Filter" %>
   </div>

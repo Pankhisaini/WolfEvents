@@ -1,19 +1,18 @@
 
 <%if current_user %>
-  <%= link_to 'View profile', profile_path(id: current_user.id) %>
   <%= link_to 'Edit your profile', edit_user_path(id: current_user.id) %>
-  <%= link_to "View Events", events_path %>
-  <%= link_to "My Bookings", my_bookings_path %>
-  <%= link_to "My Reviews", my_reviews_path %>
-  <%= link_to "View All Reviews", reviews_path %>
-  <%= link_to "View all Attendees", users_path %>
-  <% unless !current_user.is_admin? %>
-  <%= link_to "Add Events",new_event_path %>
-    <%= link_to "View All Bookings", all_bookings_path %>
-    <%= link_to "View Rooms", rooms_path %>
+  <%= link_to 'View profile', profile_path(id: current_user.id) %> |
+  <%= link_to "View Events", events_path %> |
+  <%= link_to "My Reviews", my_reviews_path %> |
+  <%= link_to "View All Reviews", reviews_path %> |
+  <%= link_to "My Bookings", my_bookings_path(id: current_user.id) %> |
+    <% unless !current_user.is_admin? %>
+      <%= link_to "Add Events",new_event_path %> |
+      <%= link_to "View all Attendees", users_path %> |
+      <%= link_to "View All Bookings", all_bookings_path %> |
+      <%= link_to "View Rooms", rooms_path %> |
+      <%= link_to "Create Room", new_room_path %>
     <%end %>
-
-
 <%else %>
   <%= link_to "Signup", signup_path%> or
   <%= link_to "Login",login_path %>

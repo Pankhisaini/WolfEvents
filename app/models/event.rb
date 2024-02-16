@@ -5,7 +5,7 @@ class Event < ApplicationRecord
   validates :event_start_time, presence: true
   validates :event_end_time, presence: true
   validates :ticket_price, presence: true, numericality: { greater_than_or_equal_to: 0 }
-  validates :number_of_seats_left, presence: true, numericality: { greater_than: 0 }
+  validates :number_of_seats_left, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
 
   belongs_to :room

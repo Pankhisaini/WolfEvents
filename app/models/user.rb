@@ -4,7 +4,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: /\A[^@\s]+@[^@\s]+\.[^@\s]+\z/, message: "Invalid email format" }
   validates :phone_number, presence: true, format: { with: /\A\d{10}\z/, message: "Phone number must be 10 digits" }
   validates :credit_card_information, presence: true, format: { with: /\A\d{16}\z/, message: "Credit card number must be 16 digits" }
-  validates :password, presence: true
+  validates :password, presence: true, on: :create
   validates :name, presence: true
   validates :address, presence: true
 

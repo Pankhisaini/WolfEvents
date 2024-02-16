@@ -18,22 +18,13 @@
     </div>
     <div>
       <%= form.label :password, style: "display: block" %>
-      <%= form.text_field :password %>
+      <%= form.text_field :password%>
     </div>
    <%else %>
     <% if !@user.is_admin?%>
       <div>
         <%= form.label :password, style: "display: block" %>
         <%= form.text_field :password %>
-      </div>
-    <%else %>
-      <div>
-        <%= form.label :email, style: "display: block" %>
-        <%= form.text_field :email, readonly:true %>
-      </div>
-      <div>
-        <%= form.label :password, style: "display: block" %>
-        <%= form.text_field :password, readonly:true, value:current_user.password_digest %>
       </div>
     <%end %>
   <% end %>
