@@ -47,7 +47,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if current_user.is_admin? && @user.is_admin?
-        if @user.update(user_params)
+        if @user.update(user_params_without_password)
           format.html { redirect_to profile_path, notice: "User was successfully updated." }
           format.json { render :show, status: :ok, location: @user }
         else
@@ -86,5 +86,9 @@ class UsersController < ApplicationController
     # Only allow a list of trusted parameters through.
     def user_params
       params.require(:user).permit(:email, :password, :name, :phone_number, :address, :credit_card_information)
+    end
+
+    def user_params_without_password
+      params.require(:user).permit(:name, :phone_number, :address, :credit_card_information)
     end
 end

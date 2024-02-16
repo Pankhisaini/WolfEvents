@@ -4,12 +4,8 @@ class TicketsController < ApplicationController
   # GET /tickets or /tickets.json
   def index
     # Regular user view (own bookings)
-    @tickets = current_user.tickets.map do |ticket|
-      {
-        event: ticket.event,
-        event_name: ticket.event.event_name
-      }
-    end
+    # @tickets = current_user.tickets
+
   end
 
   def my_bookings
@@ -20,13 +16,31 @@ class TicketsController < ApplicationController
 
   def all_bookings
     # Admin view (all bookings)
-    if current_user.is_admin?
+    # if current_user.is_admin?
       @tickets = Ticket.all
-    else
-      # Regular user view (own bookings)
-      @tickets = current_user.tickets
+    if params[:event_name_search].present?
+      # Use the SQL LIKE operator to find email IDs similar to the search term
+      search_term = "%#{params[:event_name_search]}%"
+      @events = Event.where('event_name LIKE ?', search_term)
+      # Get IDs of matching users
+      event_ids = @events.pluck(:id)
+      # Filter reviews by user IDs
+      @tickets = @tickets.where(event_id: event_ids)
     end
-    render :index # Reuse the index view
+
+    if params[:user_name_search].present?
+      user_search_term = "%#{params[:user_name_search]}%"
+      @users = User.where('name LIKE ?', user_search_term)
+      user_ids = @users.pluck(:id)
+
+      # Filter reviews by event IDs
+      @tickets = @tickets.where(user_id: user_ids)
+    end
+    # else
+    #   # Regular user view (own bookings)
+    #   @tickets = current_user.tickets
+    # end
+    render :index
   end
 
   def event_history

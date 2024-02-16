@@ -1,6 +1,9 @@
 class SessionsController < ApplicationController
   skip_before_action :authorized,only: [:new, :create]
   def new
+    if logged_in?
+      reset_session
+    end
   end
 
   def create

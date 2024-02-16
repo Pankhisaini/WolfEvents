@@ -1,6 +1,24 @@
 <p style="color: green"><%= notice %></p>
 
 <h1>Tickets</h1>
+<%= form_with(url: all_bookings_path, method: :get) do |form| %>
+  <div class="form-group">
+    <%= form.label :event_name, "Filter by event:" %>
+    <%= form.text_field :event_name_search, placeholder: 'Search by event name', class: 'form-control', id: 'event_name_search', value: params[:event_name_search]%>
+  </div>
+  <div class="form-group">
+    <%= form.label :user_name, "Filter by user:" %>
+    <%= form.text_field :user_name_search, placeholder: 'Search by user name', class: 'form-control', id: 'user_name_search', value: params[:user_name_search] %>
+
+  </div>
+  <%= form.submit 'Filter', class: 'btn btn-primary' %>
+<% end %>
+
+
+
+<%= link_to 'Clear Filter', all_bookings_path, class: 'btn btn-secondary' %>
+
+
 
 <div id="tickets">
   <% @tickets.each do |ticket| %>
