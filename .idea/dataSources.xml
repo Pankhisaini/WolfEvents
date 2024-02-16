@@ -13,5 +13,12 @@
         </library>
       </libraries>
     </data-source>
+    <data-source source="LOCAL" name="identifier.sqlite" uuid="143c4243-ff6d-448e-b9ab-75d083c0fc65">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:identifier.sqlite</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

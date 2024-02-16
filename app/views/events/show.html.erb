@@ -3,7 +3,9 @@
 <%= render @event %>
 
 <div>
+  <% unless @event.event_date < Date.today || (@event.event_date == Date.today && @event.event_start_time <= Time.now) %>
   <%= link_to "Book tickets", new_ticket_path(event_id: @event.id, user_id: current_user.id, room_id: @event.room.id) %>
+    <%end %>
   <% unless !current_user.is_admin? %>
   <%= link_to "Edit this event", edit_event_path(@event) %> |
   <%end %>

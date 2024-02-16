@@ -6,22 +6,29 @@
 
   <p>
     <strong>Room:</strong>
-    <%= ticket.room_id %>
+    <%= ticket.room.room_location %>
   </p>
 
   <p>
     <strong>Event:</strong>
-    <%= ticket.event_id %>
+    <%= ticket.event.event_name %>
   </p>
 
   <p>
     <strong>User:</strong>
-    <%= ticket.user_id %>
+    <%= ticket.user.name %>
   </p>
 
   <p>
     <strong>Number of Tickets:</strong>
     <%= ticket.number_of_tickets %>
+  </p>
+
+  <% event = Event.find(ticket.event_id) %>
+  <% total_price = event.ticket_price * ticket.number_of_tickets %>
+  <p>
+    <strong>Total Price:</strong>
+    <%= number_to_currency(total_price) %>
   </p>
 
 </div>

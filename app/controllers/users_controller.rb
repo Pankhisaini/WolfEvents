@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
   # GET /users or /users.json
   def index
-    @users = User.where(is_admin: false)
+    @users = User.all
   end
 
   # GET /users/1 or /users/1.json
@@ -69,9 +69,12 @@ class UsersController < ApplicationController
   # DELETE /users/1 or /users/1.json
   def destroy
     @user.destroy!
-    reset_session
+    if !current_user.is_admin? && !@user.is_admin?
+      reset_session
+    end
+
     respond_to do |format|
-      format.html { redirect_to root_url, notice: "User was successfully destroyed." }
+      format.html { redirect_to users_url, notice: "User was successfully destroyed." }
       format.json { head :no_content }
     end
   end

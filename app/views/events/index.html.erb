@@ -35,7 +35,7 @@
     <%= submit_tag "Filter" %>
   </div>
 <% end %>
-
+<%= link_to 'Clear Filter', events_path, class: 'btn btn-secondary' %>
 <div id="events">
 
   <% @events.each do |event| %>

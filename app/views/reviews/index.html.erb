@@ -29,6 +29,7 @@
     <% if review.user_id == current_user.id %>
         <p>
           <%= link_to "Edit this review", edit_review_path(review) %>
+          <%= button_to "Destroy this review", @review, method: :delete %>
         </p>
     <% end %>
   <% end %>
