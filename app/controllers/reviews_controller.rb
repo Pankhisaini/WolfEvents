@@ -37,14 +37,28 @@ class ReviewsController < ApplicationController
 end
 
   def my_reviews
+    puts "hihih"
+    puts params[:id]
+    puts current_user.id
+    if current_user.id != params[:id].to_i
+      redirect_to root_url
+    end
     @my_reviews = current_user.reviews
   end
   # GET /reviews/1 or /reviews/1.json
+
   def show
+    # STILL IN DOUBT
   end
 
   # GET /reviews/new
   def new
+    # @user = User.find_by_id(params[:id].to_i)
+    # if (current_user.id != params[:user_id].to_i)
+    #   redirect_to root_url
+    # elsif current_user.id == params[:user_id].to_i && @user.tickets.where(id: params[:id])
+    #   redirect_to root_url
+    # end
     @event = Event.find(params[:event_id])
     @review = Review.new
   end

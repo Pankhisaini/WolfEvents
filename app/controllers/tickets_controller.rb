@@ -9,9 +9,13 @@ class TicketsController < ApplicationController
   end
 
   def my_bookings
+    if current_user.id != params[:id].to_i
+      redirect_to root_url
     # Regular user view (own bookings)
-    @tickets = current_user.tickets
-    render :index # Reuse the index view
+    else
+      @tickets = current_user.tickets
+      render :index # Reuse the index view
+    end
   end
 
   def all_bookings

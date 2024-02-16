@@ -39,15 +39,24 @@ class EventsController < ApplicationController
   # GET /events/1 or /events/1.json
   def show
     @event = Event.find(params[:id])
+    if !current_user.is_admin? && (@event.event_date < Date.today || (@event.event_date==Date.today && @event.event_start_time < Time.now || @event.number_of_seats_left <= 0))
+      redirect_to root_url
+    end
   end
 
   # GET /events/new
   def new
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
     @event = Event.new
   end
 
   # GET /events/1/edit
   def edit
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
   end
 
   # POST /events or /events.json
@@ -80,6 +89,9 @@ class EventsController < ApplicationController
 
   # DELETE /events/1 or /events/1.json
   def destroy
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
     @event.destroy!
 
     respond_to do |format|

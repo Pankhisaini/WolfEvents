@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   get 'available_rooms', to: 'rooms#available_rooms',as:"available_rooms"
   get '/:id/my_bookings', to: 'tickets#my_bookings',as:"my_bookings"
   get 'all_bookings', to: 'tickets#all_bookings',as:"all_bookings"
-  get 'my_reviews', to: 'reviews#my_reviews',as:"my_reviews"
+  get '/:id/my_reviews', to: 'reviews#my_reviews',as:"my_reviews"
   # Defines the root path route ("/")
   # root "posts#index"
 end
