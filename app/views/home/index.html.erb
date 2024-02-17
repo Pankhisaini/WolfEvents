@@ -1,6 +1,5 @@
 
 <%if current_user %>
-  hello
   <%= link_to 'Edit your profile', edit_user_path(id: current_user.id) %>
   <%= link_to 'View profile', profile_path(id: current_user.id) %> |
   <%= link_to "View Events", events_path %> |
