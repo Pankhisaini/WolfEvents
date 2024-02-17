@@ -23,9 +23,9 @@
 
   <div>
     <%= form.label :event_date, style: "display: block" %>
-    <%= form.date_field :event_date, id: "event_date"%>
+    <%= form.date_field :event_date, id: "event_date", min: Date.today.strftime('%Y-%m-%d')%>
   </div>
-
+  <%#=Time.now %>
   <div>
     <%= form.label :event_start_time, style: "display: block" %>
     <%= form.time_field :event_start_time, id: "event_start_time"%>

@@ -19,13 +19,13 @@ class EventsController < ApplicationController
       @events = @events.where(event_date: params[:date])
     end
 
-    if params[:min_price].present?
-      min_price = params[:min_price].to_i
+    if params[:minPrice].present?
+      min_price = params[:minPrice].to_i
       @events = @events.where('ticket_price >= ?', min_price)
     end
 
-    if params[:max_price].present?
-      min_price = params[:max_price].to_i
+    if params[:maxPrice].present?
+      min_price = params[:maxPrice].to_i
       @events = @events.where('ticket_price <= ?', min_price)
     end
     #puts @events[0].event_name

@@ -3,8 +3,8 @@ class ReviewsController < ApplicationController
 
   # GET /reviews or /reviews.json
   def index
+    puts "Yes yes All mei hoon"
     @reviews = Review.all
-
     # Filter by user email if user_email_search parameter is present
     if params[:user_email_search].present?
       # Use the SQL LIKE operator to find email IDs similar to the search term
@@ -48,29 +48,40 @@ end
   # GET /reviews/1 or /reviews/1.json
 
   def show
-    # STILL IN DOUBT
+    @review = Review.find(params[:id])
+    if current_user.id != @review.user_id.to_i
+      redirect_to root_url
+    end
   end
+
 
   # GET /reviews/new
   def new
-    # @user = User.find_by_id(params[:id].to_i)
-    # if (current_user.id != params[:user_id].to_i)
-    #   redirect_to root_url
-    # elsif current_user.id == params[:user_id].to_i && @user.tickets.where(id: params[:id])
-    #   redirect_to root_url
-    # end
-    @event = Event.find(params[:event_id])
+    puts "new mei hoon"
+    puts params
+    @event = Event.find_by_id(params[:event_id])
+    @user = User.find_by_id(params[:user_id])
+    @current_tickets = current_user.tickets
+    # @params_tickets = @user.tickets
+    size = @current_tickets.where(event_id: @event.id).count
+
+    if ((current_user.id != params[:user_id].to_i) || size == 0 || (@event.event_date > Date.today || ( @event.event_date == Date.today && @event.event_start_time > Time.now)))
+      redirect_to root_url
+    end
     @review = Review.new
   end
 
   # GET /reviews/1/edit
   def edit
+    @review = Review.find_by_id(params[:id])
+    if current_user.id != @review.user_id
+      redirect_to root_url
+    end
   end
 
   # POST /reviews or /reviews.json
   def create
     @review = Review.new(review_params)
-
     respond_to do |format|
       if @review.save
         format.html { redirect_to review_url(@review), notice: "Review was successfully created." }

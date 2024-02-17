@@ -3,7 +3,11 @@
 <%= render @event %>
 
 <div>
-  <% unless @event.event_date < Date.today || (@event.event_date == Date.today && @event.event_start_time <= Time.now)|| @event.number_of_seats_left <= 0 %>
+  <%#current_date = Time.now.utc.to_date  %>
+  <%#event_time = event.event_start_time.strftime("%H:%M:%S") %>
+  <%#current_time = Time.current.strftime("%H:%M:%S") %>
+  <%#=Time.current %>
+  <% unless @event.event_date < Time.now.utc.to_date  || (@event.event_date == Time.now.utc.to_date  && @event.event_start_time <= Time.current.strftime("%H:%M:%S") )|| @event.number_of_seats_left <= 0 %>
   <%= link_to "Book tickets", new_ticket_path(event_id: @event.id, user_id: current_user.id, room_id: @event.room.id) %>
     <%end %>
   <% unless !current_user.is_admin? %>

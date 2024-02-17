@@ -3,62 +3,81 @@ class TicketsController < ApplicationController
 
   # GET /tickets or /tickets.json
   def index
+    if current_user.id != params[:id].to_i
+      redirect_to root_url
+    else
+      @tickets = current_user.tickets
+    end
     # Regular user view (own bookings)
     # @tickets = current_user.tickets
-
   end
 
   def my_bookings
     if current_user.id != params[:id].to_i
       redirect_to root_url
-    # Regular user view (own bookings)
     else
       @tickets = current_user.tickets
+      if params[:event_name_search].present?
+        # Use the SQL LIKE operator to find email IDs similar to the search term
+        search_term = "%#{params[:event_name_search]}%"
+        @events = Event.where('event_name LIKE ?', search_term)
+        # Get IDs of matching users
+        event_ids = @events.pluck(:id)
+        # Filter reviews by user IDs
+        @tickets = @tickets.where(event_id: event_ids)
+      end
+      if params[:user_name_search].present?
+        user_search_term = "%#{params[:user_name_search]}%"
+        @users = User.where('name LIKE ?', user_search_term)
+        user_ids = @users.pluck(:id)
+
+        # Filter reviews by event IDs
+        @tickets = @tickets.where(user_id: user_ids)
+      end
       render :index # Reuse the index view
     end
   end
 
   def all_bookings
-    # Admin view (all bookings)
-    # if current_user.is_admin?
+    if !current_user.is_admin?
+      redirect_to root_url
+    else
       @tickets = Ticket.all
-    if params[:event_name_search].present?
-      # Use the SQL LIKE operator to find email IDs similar to the search term
-      search_term = "%#{params[:event_name_search]}%"
-      @events = Event.where('event_name LIKE ?', search_term)
-      # Get IDs of matching users
-      event_ids = @events.pluck(:id)
-      # Filter reviews by user IDs
-      @tickets = @tickets.where(event_id: event_ids)
+      if params[:event_name_search].present?
+        # Use the SQL LIKE operator to find email IDs similar to the search term
+        search_term = "%#{params[:event_name_search]}%"
+        @events = Event.where('event_name LIKE ?', search_term)
+        # Get IDs of matching users
+        event_ids = @events.pluck(:id)
+        # Filter reviews by user IDs
+        @tickets = @tickets.where(event_id: event_ids)
+      end
+      if params[:user_name_search].present?
+        user_search_term = "%#{params[:user_name_search]}%"
+        @users = User.where('name LIKE ?', user_search_term)
+        user_ids = @users.pluck(:id)
+
+        # Filter reviews by event IDs
+        @tickets = @tickets.where(user_id: user_ids)
+      end
+      render :index
     end
-
-    if params[:user_name_search].present?
-      user_search_term = "%#{params[:user_name_search]}%"
-      @users = User.where('name LIKE ?', user_search_term)
-      user_ids = @users.pluck(:id)
-
-      # Filter reviews by event IDs
-      @tickets = @tickets.where(user_id: user_ids)
-    end
-    # else
-    #   # Regular user view (own bookings)
-    #   @tickets = current_user.tickets
-    # end
-    render :index
-  end
-
-  def event_history
-
   end
 
   # GET /tickets/1 or /tickets/1.json
   def show
+    if current_user.id != params[:id].to_i
+      redirect_to root_url
+    end
   end
 
   # GET /tickets/new
   def new
-    @confirmation_number = SecureRandom.random_number(1_000..9_999) # Generates a random integer between 1,000,000 and 9,999,999
     @event = Event.find(params[:event_id])
+    if current_user.id != params[:user_id].to_i || (@event.event_date < Date.today || (@event.event_date == Date.today && @event.event_start_time < Time.now))
+      redirect_to root_url
+    end
+    @confirmation_number = SecureRandom.random_number(1_000..9_999) # Generates a random integer between 1,000,000 and 9,999,999
     #@event
     @room = Room.find_by_id(@event.room_id)
     @ticket = Ticket.new
@@ -66,6 +85,7 @@ class TicketsController < ApplicationController
 
   # GET /tickets/1/edit
   def edit
+    redirect_to root_url
   end
 
   # POST /tickets or /tickets.json
