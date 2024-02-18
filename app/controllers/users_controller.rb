@@ -3,11 +3,17 @@ class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
   # GET /users or /users.json
   def index
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
     @users = User.all
   end
 
   # GET /users/1 or /users/1.json
   def show
+    if current_user.id != params[:id].to_i && !current_user.is_admin?
+      redirect_to root_url
+    end
     puts "in show"
     puts params
     @user = User.find(params[:id])
@@ -15,16 +21,24 @@ class UsersController < ApplicationController
 
   # GET /users/new
   def new
+    if !current_user.nil? && !current_user.is_admin?
+      redirect_to root_url
+    end
     @user = User.new
   end
 
   # GET /users/1/edit
   def edit
+    if current_user.id != params[:id].to_i && !current_user.is_admin?
+      redirect_to root_url
+    end
   end
 
   # POST /users or /users.json
   def user_url(user)
-    # code here
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
   end
 
   def create
@@ -64,7 +78,7 @@ class UsersController < ApplicationController
         end
       end
     end
-    end
+  end
 
   # DELETE /users/1 or /users/1.json
   def destroy
@@ -80,18 +94,18 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      puts "ID parameter: #{params[:id]}"
-      @user = User.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    puts "ID parameter: #{params[:id]}"
+    @user = User.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.require(:user).permit(:email, :password, :name, :phone_number, :address, :credit_card_information)
-    end
+  # Only allow a list of trusted parameters through.
+  def user_params
+    params.require(:user).permit(:email, :password, :name, :phone_number, :address, :credit_card_information)
+  end
 
-    def user_params_without_password
-      params.require(:user).permit(:name, :phone_number, :address, :credit_card_information)
-    end
+  def user_params_without_password
+    params.require(:user).permit(:name, :phone_number, :address, :credit_card_information)
+  end
 end
