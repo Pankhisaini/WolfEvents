@@ -26,14 +26,6 @@ class TicketsController < ApplicationController
         # Filter reviews by user IDs
         @tickets = @tickets.where(event_id: event_ids)
       end
-      if params[:user_name_search].present?
-        user_search_term = "%#{params[:user_name_search]}%"
-        @users = User.where('name LIKE ?', user_search_term)
-        user_ids = @users.pluck(:id)
-
-        # Filter reviews by event IDs
-        @tickets = @tickets.where(user_id: user_ids)
-      end
       render :index # Reuse the index view
     end
   end
