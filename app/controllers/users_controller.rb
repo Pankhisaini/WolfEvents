@@ -7,6 +7,20 @@ class UsersController < ApplicationController
       redirect_to root_url
     end
     @users = User.all
+    #@users = @users.joins(:events).where(events: { event_name: params[:event_name] }).distinct if params[:event_name].present?
+    if params[:event_name].present?
+      @event = Event.find_by(event_name: params[:event_name])
+      @tickets = @event.tickets
+      user_ids = @tickets.pluck(:user_id)
+      @attendees = User.where(id: user_ids)
+      puts "hahahahahhahhaah"
+      puts @event.event_name
+      puts @attendees
+      @users = @attendees
+      #@users = @users.joins(:events).where("events.event_name LIKE ?", "%#{params[:event_name]}%").distinct
+    end
+    puts @users
+    @users
   end
 
   # GET /users/1 or /users/1.json

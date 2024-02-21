@@ -4,6 +4,8 @@
   <% unless !current_user.is_admin? %>
     <%= link_to "Add Events",new_event_path %> <br>
   <%end %>
+  <%= link_to "Search Events", event_search_path %>
+
   <br>
 
   <%= link_to "My Reviews", my_reviews_path(id: current_user.id) %> <br>

@@ -1,0 +1,16 @@
+<%= form_tag event_search_path, method: :get do %>
+  <%= label_tag :event_name, "Event Name" %>
+  <%= text_field_tag :event_name %>
+  <%= submit_tag "Search" %>
+<% end %>
+
+<% if @attendees.present? %>
+  <h2>Attendees for <%= @event.name %>:</h2>
+  <ul>
+    <% @attendees.each do |attendee| %>
+      <li><%= attendee.name %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No attendees found for this event.</p>
+<% end %>

@@ -100,19 +100,19 @@ class EventsController < ApplicationController
     end
   end
 
-  # def search_attendees
-  #   @event = Event.find_by(name: params[:event_name])
-  #   if @event
-  #     @attendees = @event.tickets.map(&:user)
-  #   else
-  #     flash[:alert] = "Event not found."
-  #     redirect_to events_path
-  #   end
-  # end
   def search
-    @event_name = params[:event_name]
-    @events = Event.where("event_name LIKE ?", "%#{@event_name}%")
+    @event = Event.find_by(name: params[:event_name])
+    if @event
+      @attendees = @event.tickets.map(&:user)
+    else
+      flash[:alert] = "Event not found."
+      redirect_to events_path
+    end
   end
+  # def search
+  #   @event = Event.find_by(name: params[:event_name])
+  #   @events = Event.where("event_name LIKE ?", "%#{@event_name}%")
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
