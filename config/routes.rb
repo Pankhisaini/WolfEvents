@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   get '/:id/my_bookings', to: 'tickets#my_bookings',as:"my_bookings"
   get 'all_bookings', to: 'tickets#all_bookings',as:"all_bookings"
   get '/:id/my_reviews', to: 'reviews#my_reviews',as:"my_reviews"
+  # get 'events/search', to: 'events#search', as: 'event_search'
   # Defines the root path route ("/")
   # root "posts#index"
 end

@@ -56,6 +56,7 @@ class TicketsController < ApplicationController
     end
   end
 
+
   # GET /tickets/1 or /tickets/1.json
   def show
     if !current_user.is_admin? && (current_user.id!=@ticket.user_id && current_user.id != @ticket.belongs_to)

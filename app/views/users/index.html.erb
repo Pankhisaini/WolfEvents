@@ -15,12 +15,21 @@
         padding: 15px;
     }
 </style>
+<%=@display %>
+<%if params[:display]%>
+  <h1>Search By Events</h1>
+  <%= form_with(url: users_path(display: 1), method: "get", local: true) do %>
+    <div class="field">
+      <%= text_field_tag :event_name, params[:event_name], placeholder: "Enter event name" %>
+      <%= hidden_field_tag :display, params[:display] %>
+      <%= submit_tag "Search" %>
+    </div>
+  <% end %>
+<%else %>
+  <h1>Attendees</h1>
+  <%= link_to "New user", new_user_path%><br><br>
+<%end %>
 
-
-<h1>Attendees</h1>
-<%= link_to "New user", new_user_path%>
-<br>
-<br>
 <table>
   <thead>
   <tr>
@@ -35,7 +44,6 @@
   <tbody>
   <div id="users">
   <% @users.each do |user| %>
-      <%if !user.is_admin? %>
         <tr>
           <td><%= user.name %></td>
           <td><%= user.email %></td>
@@ -43,9 +51,11 @@
           <td><%= user.phone_number %></td>
           <td><%= link_to 'Show', user %> |
           <%= link_to 'Edit', edit_user_path(user) %> |
+            <%if !user.is_admin? %>
           <%= button_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              <%end %>
         </tr>
-      <%end %>
+
   <% end %>
 
   </div>
