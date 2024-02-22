@@ -17,6 +17,10 @@
   <%end %>
 
   <% unless !current_user.is_admin? %>
+    <%= link_to "Search Attendees by Event", users_path(display: 1) %> <br><br>
+  <%end %>
+
+  <% unless !current_user.is_admin? %>
     <%= link_to "View all Attendees", users_path %> <br><br>
   <%end %>
 

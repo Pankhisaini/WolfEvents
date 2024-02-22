@@ -6,6 +6,9 @@ class UsersController < ApplicationController
     if !current_user.is_admin?
       redirect_to root_url
     end
+    puts "IN INDEXXX ookay"
+    puts params
+
     @users = User.all
     #@users = @users.joins(:events).where(events: { event_name: params[:event_name] }).distinct if params[:event_name].present?
     if params[:event_name].present?
@@ -17,7 +20,6 @@ class UsersController < ApplicationController
       puts @event.event_name
       puts @attendees
       @users = @attendees
-      #@users = @users.joins(:events).where("events.event_name LIKE ?", "%#{params[:event_name]}%").distinct
     end
     puts @users
     @users
