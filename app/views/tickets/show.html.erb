@@ -4,5 +4,7 @@
 
 <div>
   <%= link_to "Show all my tickets", my_bookings_path(id: current_user.id) %>
-  <%= button_to "Delete this ticket", @ticket, method: :delete %>
+  <%if current_user.id == @ticket.user_id %>
+    <%= button_to "Delete this ticket", @ticket, method: :delete %>
+  <%end %>
 </div>

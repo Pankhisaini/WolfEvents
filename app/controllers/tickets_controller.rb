@@ -16,7 +16,7 @@ class TicketsController < ApplicationController
     if current_user.id != params[:id].to_i
       redirect_to root_url
     else
-      @tickets = current_user.tickets
+      @tickets = Ticket.where("user_id = ? OR belongs_to = ?", current_user.id, current_user.id)
       if params[:event_name_search].present?
         # Use the SQL LIKE operator to find email IDs similar to the search term
         search_term = "%#{params[:event_name_search]}%"
@@ -50,7 +50,7 @@ class TicketsController < ApplicationController
         user_ids = @users.pluck(:id)
 
         # Filter reviews by event IDs
-        @tickets = @tickets.where(user_id: user_ids)
+        @tickets = @tickets.where("user_id IN (?) OR belongs_to IN (?)", user_ids, user_ids)
       end
       render :index
     end
@@ -59,21 +59,26 @@ class TicketsController < ApplicationController
 
   # GET /tickets/1 or /tickets/1.json
   def show
-    if current_user.id != params[:id].to_i
+    if !current_user.is_admin? && (current_user.id!=@ticket.user_id && current_user.id != @ticket.belongs_to)
       redirect_to root_url
     end
   end
 
   # GET /tickets/new
   def new
+    # if current_user.id != params[:user_id].to_i || (@event.event_date < Date.today || (@event.event_date == Date.today && @event.event_start_time < Time.now))
+    #   redirect_to root_url
+    # end
     @event = Event.find(params[:event_id])
-    if current_user.id != params[:user_id].to_i || (@event.event_date < Date.today || (@event.event_date == Date.today && @event.event_start_time < Time.now))
-      redirect_to root_url
-    end
-    @confirmation_number = SecureRandom.random_number(1_000..9_999) # Generates a random integer between 1,000,000 and 9,999,999
-    #@event
+    @confirmation_number = SecureRandom.random_number(1_000..9_999)
     @room = Room.find_by_id(@event.room_id)
     @ticket = Ticket.new
+    if !params[:user_id].present?
+      render :other
+    end
+
+
+
   end
 
   # GET /tickets/1/edit
@@ -83,9 +88,18 @@ class TicketsController < ApplicationController
 
   # POST /tickets or /tickets.json
   def create
+    puts params
     @ticket = Ticket.new(ticket_params)
     @event = Event.find(params[:ticket][:event_id])
     @ticket.update(confirmation_number: generate_confirmation_number)
+    puts params[:ticket][:number_of_tickets]
+    if params[:ticket][:user_email_search].present?
+      puts "Pohoch gayaa"
+      @other_user = User.find_by(email:params[:ticket][:user_email_search])
+      puts "Check"
+      puts @other_user.name
+      @ticket.update(belongs_to: @other_user.id)
+    end
     respond_to do |format|
       if @ticket.save
         @event.update(number_of_seats_left: @event.number_of_seats_left - @ticket.number_of_tickets)
@@ -131,7 +145,7 @@ class TicketsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ticket_params
-      params.require(:ticket).permit(:confirmation_number, :room_id, :event_id, :user_id, :number_of_tickets)
+      params.require(:ticket).permit(:confirmation_number, :room_id, :event_id, :user_id, :number_of_tickets, :belongs_to)
     end
     def generate_confirmation_number
       rand(100_000..999_999)
