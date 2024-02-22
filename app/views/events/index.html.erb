@@ -69,10 +69,11 @@
     <tbody>
     <% @events.each do |event| %>
       <% if current_user.is_admin %>
+
         <tr>
           <td><%= event.event_name %></td>
           <td><%= event.event_category %></td>
-          <td><%= event.event_date.strftime('%Y-%m-%d') %></td>
+          <td><%= event.event_date%></td>
           <td><%= event.event_start_time.strftime('%H:%M') %></td>
           <td><%= event.event_end_time.strftime('%H:%M') %></td>
           <td><%= event.ticket_price %></td>
@@ -85,7 +86,7 @@
         </tr>
       <% else %>
         <% event_date = event.event_date %>
-        <% current_date = Time.now.utc.to_date  %>
+        <% current_date = Time.current.utc.to_date  %>
         <% event_time = event.event_start_time.strftime("%H:%M") %>
         <% current_time = Time.current.strftime("%H:%M") %>
         <% if (event.number_of_seats_left > 0) && ((event_date > current_date) || (event_date == current_date && event_time > current_time)) %>
@@ -170,7 +171,7 @@
                         else
                         {
                             var event_date = event.event_date;
-                            var current_date = Time.now.utc.to_date
+                            var current_date = Time.current.utc.to_date
                             var event_time = event.event_start_time.strftime("%H:%M")
                             var current_time = Time.current.strftime("%H:%M")
                             if((event.number_of_seats_left > 0) && ((event_date > current_date) || (event_date == current_date && event_time > current_time)))

@@ -39,7 +39,7 @@ class EventsController < ApplicationController
   # GET /events/1 or /events/1.json
   def show
     @event = Event.find(params[:id])
-    if !current_user.is_admin? && (@event.event_date < Date.today || (@event.event_date==Date.today && @event.event_start_time < Time.now || @event.number_of_seats_left <= 0))
+    if !current_user.is_admin? && (@event.event_date < Time.now.utc.to_date || (@event.event_date==Time.now.utc.to_date  && @event.event_start_time.strftime('%H:%M') < Time.current.strftime('%H:%M') || @event.number_of_seats_left <= 0))
       redirect_to root_url
     end
   end
