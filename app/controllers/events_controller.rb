@@ -100,15 +100,7 @@ class EventsController < ApplicationController
     end
   end
 
-  def search
-    @event = Event.find_by(name: params[:event_name])
-    if @event
-      @attendees = @event.tickets.map(&:user)
-    else
-      flash[:alert] = "Event not found."
-      redirect_to events_path
-    end
-  end
+ 
   # def search
   #   @event = Event.find_by(name: params[:event_name])
   #   @events = Event.where("event_name LIKE ?", "%#{@event_name}%")

@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     @users = User.all
     #@users = @users.joins(:events).where(events: { event_name: params[:event_name] }).distinct if params[:event_name].present?
     if params[:event_name].present?
-      @event = Event.find_by(event_name: params[:event_name])
+      @event = Event.where("event_name LIKE ?", "%#{params[:event_name]}%").first
       @tickets = @event.tickets
       user_ids = @tickets.pluck(:user_id)
       @attendees = User.where(id: user_ids)
