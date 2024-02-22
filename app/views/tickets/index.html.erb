@@ -33,7 +33,7 @@
     <%= render ticket %>
     <%event_time = ticket.event.event_end_time.strftime("%H:%M") %>
     <%current_time = Time.current.strftime("%H:%M") %>
-    <% if (ticket.user_id == current_user.id) && (ticket.event.event_date < Date.today || (ticket.event.event_date == Date.today && event_time < current_time)) && ticket.event.event_category != 'Miscellaneous'%>
+    <% if (ticket.user_id == current_user.id) && (ticket.event.event_date < Time.current.utc.to_date || (ticket.event.event_date == Time.current.utc.to_date && event_time < current_time)) && ticket.event.event_category != 'Miscellaneous'%>
 <p>
         <%= link_to "Write a review", new_review_path(event_id: ticket.event_id, user_id: current_user.id) %>
       </p>

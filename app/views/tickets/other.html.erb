@@ -1,4 +1,8 @@
 <%= form_with(model: @ticket, url: tickets_path, local: true) do |form| %>
+  <div class="form-group">
+    <%= form.label :user_email_search, "Enter email id:" %>
+    <%= form.text_field :user_email_search, id: 'user_email_search', value: params[:user_email_search]%>
+  </div>
   <div class="field">
     <strong>Event:</strong> <%= @event.event_name %>
     <%= form.hidden_field :event_id, value: @event.id %>
@@ -6,10 +10,6 @@
   <div class="field">
     <strong>Booked By:</strong> <%= current_user.name %>
     <%= form.hidden_field :user_id, value: current_user.id %>
-  </div>
-  <div class="field">
-    <strong>Belongs To:</strong> <%= current_user.name %>
-    <%= form.hidden_field :belongs_to, value: current_user.id %>
   </div>
   <div class="field">
     <strong>Room:</strong> <%= @room.room_location %>
