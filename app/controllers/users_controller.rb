@@ -6,9 +6,13 @@ class UsersController < ApplicationController
     if !current_user.is_admin?
       redirect_to root_url
     end
+
     puts "IN INDEXXX ookay"
     puts params
     @users = User.all
+    if params[:show].present?
+      render json:@users
+    end
     #@users = @users.joins(:events).where(events: { event_name: params[:event_name] }).distinct if params[:event_name].present?
     if params[:event_name].present?
       @event = Event.where("event_name LIKE ?", "%#{params[:event_name]}%").first
