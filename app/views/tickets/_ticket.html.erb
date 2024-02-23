@@ -20,7 +20,11 @@
   </p>
   <p>
     <strong>Belongs to:</strong>
-    <%= User.find_by_id(ticket.belongs_to).name %>
+    <%if !User.find_by_id(ticket.belongs_to).nil? %>
+      <%= User.find_by_id(ticket.belongs_to).name %>
+      <%else %>
+      NIL
+    <%end %>
   </p>
   <p>
     <strong>Number of Tickets:</strong>

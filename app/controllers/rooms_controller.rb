@@ -78,9 +78,7 @@ class RoomsController < ApplicationController
     start_time = Time.parse(start_time)
     end_time = Time.parse(end_time)
     date = Date.parse(date)
-    # Convert date and time strings to DateTime objects for comparison
-    # start_datetime = DateTime.parse("#{date} #{start_time}")
-    # end_datetime = DateTime.parse("#{date} #{end_time}")
+
     @available_rooms = []
     @all_rooms = Room.all
 
@@ -92,25 +90,13 @@ class RoomsController < ApplicationController
         event_start_time = Time.parse(event.event_start_time.strftime('%H:%M'))
         event_end_time = Time.parse(event.event_end_time.strftime('%H:%M'))
         event_date = event.event_date
-        puts event_date
-        puts event_start_time
-        puts event_end_time
-
-        puts date
-        puts start_time
-        puts end_time
-        puts ".............."
         if (event_date == date && !(start_time >= event_end_time || end_time <= event_start_time))
-          puts "Nai Chalega"
           is_room_available = false
           break
         end
       end
-      puts is_room_available
       @available_rooms << room if is_room_available
     end
-    puts "Available rooms"
-    puts @available_rooms
     render json: @available_rooms
   end
 

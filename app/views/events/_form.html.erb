@@ -10,7 +10,7 @@
       </ul>
     </div>
   <% end %>
-  <span style="color: red;">NOTE: The time you enter for creating an event will be stored in UTC (and not localtime EST). So create a future event considering the current UTC time (EST +05:00 hours)<br>Eg: For creating an event of 16:30 EST, enter 21:30 in Event start time</span>
+  <span style="color: red;"><b>NOTE: To create a future event, make an event post current UTC Time : <%= Time.current%></b></span><br><br>
   <div>
     <%= form.label :event_name, style: "display: block" %>
     <%= form.text_field :event_name %>
@@ -57,15 +57,12 @@
 
 <% end %>
 <script>
-    console.log("Helloooo");
     var eventDateField = document.getElementById("event_date");
     var eventStartTimeField = document.getElementById("event_start_time");
     var eventEndTimeField = document.getElementById("event_end_time");
     var roomIDSelect = document.getElementById("room_id");
 
     // Add event listeners to the form fields
-
-    console.log("HIIIIIIII");
     // Get references to the form fields
     // Function to log event date to the console
     eventDateField.addEventListener("change", logFieldChange);
@@ -77,16 +74,12 @@
     function logFieldChange(event) {
         var fieldName = event.target.name;
         var fieldValue = event.target.value;
-        console.log(fieldName + ":", fieldValue);
         if (fieldName=="event[event_date]")
             given_date=fieldValue;
         if (fieldName=="event[event_start_time]")
             given_start_time=fieldValue;
         if (fieldName=="event[event_end_time]")
             given_end_time=fieldValue;
-        console.log(given_date);
-        console.log(given_start_time);
-        console.log(given_end_time);
 
         var xhr = new XMLHttpRequest();
         var url = "<%= available_rooms_path %>?date=" + encodeURIComponent(given_date) + "&start_time=" + encodeURIComponent(given_start_time) + "&end_time=" + encodeURIComponent(given_end_time);
@@ -95,13 +88,11 @@
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var rooms = JSON.parse(xhr.responseText);
-                console.log("Called again");
                 // Clear existing options
                 roomIDSelect.innerHTML = "";
 
                 // Add new options based on the events data
                 rooms.forEach(function(room) {
-                    console.log(room)
                     var option = document.createElement("option");
                     option.text = room.room_location;
                     option.value = room.id;

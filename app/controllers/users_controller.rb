@@ -4,28 +4,26 @@ class UsersController < ApplicationController
   # GET /users or /users.json
   def index
     if !current_user.is_admin?
+
       redirect_to root_url
     end
-    puts "IN INDEXXX ookay"
-    puts params
+
     @users = User.all
-    #@users = @users.joins(:events).where(events: { event_name: params[:event_name] }).distinct if params[:event_name].present?
+    if params[:show].present?
+      render json:@users
+    end
     if params[:event_name].present?
       @event = Event.where("event_name LIKE ?", "%#{params[:event_name]}%").first
+
       if @event.present?
         @tickets = @event.tickets
         user_ids = @tickets.pluck(:user_id)
         @attendees = User.where(id: user_ids)
-        puts "hahahahahhahhaah"
-        puts @event.event_name
-        puts @attendees
         @users = @attendees
       else
         @users = []
       end
     end
-    puts @users
-    @users
   end
 
   # GET /users/1 or /users/1.json
@@ -33,8 +31,6 @@ class UsersController < ApplicationController
     if current_user.id != params[:id].to_i && !current_user.is_admin?
       redirect_to root_url
     end
-    puts "in show"
-    puts params
     @user = User.find(params[:id])
   end
 
@@ -115,7 +111,6 @@ class UsersController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_user
-    puts "ID parameter: #{params[:id]}"
     @user = User.find(params[:id])
   end
 
