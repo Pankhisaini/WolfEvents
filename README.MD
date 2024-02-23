@@ -87,3 +87,11 @@ The Rspec testing for the User model and controller is done. To run the test, ru
 ```bash
 rspec
 ```
+
+# Screenshots
+
+![LoginSignup](https://media.github.ncsu.edu/user/31460/files/d069a904-ae54-4f15-b634-753b7e08c03b)
+![SignUp](https://media.github.ncsu.edu/user/31460/files/95553d1e-377d-47c5-8251-2df1588edced)
+![Login page](https://media.github.ncsu.edu/user/31460/files/a744a170-2d6f-46e7-b500-86935700f515)
+![Admin Home page](https://media.github.ncsu.edu/user/31460/files/519e50a7-932c-41de-8d89-91bcefc31443)
+![Attendee Home page](https://media.github.ncsu.edu/user/31460/files/48adc12c-04f5-487b-9e91-3dc183714014)
