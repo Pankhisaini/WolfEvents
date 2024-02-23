@@ -8,7 +8,6 @@ class UsersController < ApplicationController
     end
     puts "IN INDEXXX ookay"
     puts params
-
     @users = User.all
     #@users = @users.joins(:events).where(events: { event_name: params[:event_name] }).distinct if params[:event_name].present?
     if params[:event_name].present?
@@ -94,7 +93,7 @@ class UsersController < ApplicationController
         end
       end
     end
-    end
+  end
 
   # DELETE /users/1 or /users/1.json
   def destroy
@@ -110,18 +109,18 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      puts "ID parameter: #{params[:id]}"
-      @user = User.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    puts "ID parameter: #{params[:id]}"
+    @user = User.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.require(:user).permit(:email, :password, :name, :phone_number, :address, :credit_card_information)
-    end
+  # Only allow a list of trusted parameters through.
+  def user_params
+    params.require(:user).permit(:email, :password, :name, :phone_number, :address, :credit_card_information)
+  end
 
-    def user_params_without_password
-      params.require(:user).permit(:name, :phone_number, :address, :credit_card_information)
-    end
+  def user_params_without_password
+    params.require(:user).permit(:name, :phone_number, :address, :credit_card_information)
+  end
 end
