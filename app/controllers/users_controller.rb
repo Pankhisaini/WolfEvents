@@ -12,13 +12,17 @@ class UsersController < ApplicationController
     #@users = @users.joins(:events).where(events: { event_name: params[:event_name] }).distinct if params[:event_name].present?
     if params[:event_name].present?
       @event = Event.where("event_name LIKE ?", "%#{params[:event_name]}%").first
-      @tickets = @event.tickets
-      user_ids = @tickets.pluck(:user_id)
-      @attendees = User.where(id: user_ids)
-      puts "hahahahahhahhaah"
-      puts @event.event_name
-      puts @attendees
-      @users = @attendees
+      if @event.present?
+        @tickets = @event.tickets
+        user_ids = @tickets.pluck(:user_id)
+        @attendees = User.where(id: user_ids)
+        puts "hahahahahhahhaah"
+        puts @event.event_name
+        puts @attendees
+        @users = @attendees
+      else
+        @users = []
+      end
     end
     puts @users
     @users
