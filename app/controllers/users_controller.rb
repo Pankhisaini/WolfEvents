@@ -14,10 +14,15 @@ class UsersController < ApplicationController
     end
     if params[:event_name].present?
       @event = Event.where("event_name LIKE ?", "%#{params[:event_name]}%").first
-      @tickets = @event.tickets
-      user_ids = @tickets.pluck(:user_id)
-      @attendees = User.where(id: user_ids)
-      @users = @attendees
+
+      if @event.present?
+        @tickets = @event.tickets
+        user_ids = @tickets.pluck(:user_id)
+        @attendees = User.where(id: user_ids)
+        @users = @attendees
+      else
+        @users = []
+      end
     end
   end
 
