@@ -1,3 +1,18 @@
+<style>
+    table, td, th {
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 15px;
+    }
+</style>
 <p style="color: green"><%= notice %></p>
 <div style="display: flex; align-items: center;">
   <h1 style="margin-right: 10px;">Events</h1>
@@ -35,32 +50,66 @@
     <%= submit_tag "Filter" %>
   </div>
 <% end %>
-<%= link_to 'Clear Filter', events_path, class: 'btn btn-secondary' %>
+<%= link_to 'Clear Filter', events_path, class: 'btn btn-secondary' %><br><br>
 <div id="events">
+  <table>
+    <thead>
+    <tr>
+      <th>Event Name</th>
+      <th>Event Category</th>
+      <th>Event Date</th>
+      <th>Event Start Time</th>
+      <th>Event End Time</th>
+      <th>Ticket Price</th>
+      <th>Seats Left</th>
+      <th>Room</th>
+      <!-- Add more table headers as needed -->
+    </tr>
+    </thead>
+    <tbody>
+    <% @events.each do |event| %>
+      <% if current_user.is_admin %>
 
-  <% @events.each do |event| %>
-    <% if current_user.is_admin %>
-      <%= render event %>
-      <p>
-        <%= link_to "Show this event", event %>
-      </p>
-
-    <% else %>
-      <%event_date = event.event_date %>
-      <%current_date = Time.now.utc.to_date  %>
-      <%event_time = event.event_start_time.strftime("%H:%M:%S") %>
-      <%current_time = Time.current.strftime("%H:%M:%S") %>
-      <% if (event.number_of_seats_left > 0) && ((event_date > current_date) || (event_date== current_date && event_time > current_time))%>
-        <%= render event %>
-        <p>
-          <%= link_to "Show this event", event %>
-        </p>
+        <tr>
+          <td><%= event.event_name %></td>
+          <td><%= event.event_category %></td>
+          <td><%= event.event_date%></td>
+          <td><%= event.event_start_time.strftime('%H:%M') %></td>
+          <td><%= event.event_end_time.strftime('%H:%M') %></td>
+          <td><%= event.ticket_price %></td>
+          <td><%= event.number_of_seats_left %></td>
+          <td><%= Room.find(event.room_id).room_location%></td>
+          <td colspan="2">
+            <%= link_to "Show", event %>
+          </td>
+          <!-- Add more table cells with event information -->
+        </tr>
       <% else %>
-        <div></div>
+        <% event_date = event.event_date %>
+        <% current_date = Time.current.utc.to_date  %>
+        <% event_time = event.event_start_time.strftime("%H:%M") %>
+        <% current_time = Time.current.strftime("%H:%M") %>
+        <% if (event.number_of_seats_left > 0) && ((event_date > current_date) || (event_date == current_date && event_time > current_time)) %>
+          <tr>
+            <td><%= event.event_name %></td>
+            <td><%= event.event_category %></td>
+            <td><%= event.event_date.strftime('%Y-%m-%d') %></td>
+            <td><%= event.event_start_time.strftime('%H:%M') %></td>
+            <td><%= event.event_end_time.strftime('%H:%M') %></td>
+            <td><%= event.ticket_price %></td>
+            <td><%= event.number_of_seats_left %></td>
+            <td><%= Room.find(event.room_id).room_location%></td>
+            <td colspan="2">
+              <%= link_to "Show", event %>
+            </td>
+          </tr>
+        <% else %>
+
+        <% end %>
       <% end %>
     <% end %>
-  <% end %>
-
+    </tbody>
+  </table>
 </div>
 
 <script>
@@ -86,28 +135,103 @@
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var events = JSON.parse(xhr.responseText);
-                    var eventsHTML = "";
-                    // Generate HTML for filtered events
-                    // Generate HTML for filtered events
-                    events.forEach(function(e) {
-                        // Construct HTML for each event
-                        var eventHTML = "<div>" +
-                            "<p>" + e.event_name + "</p>" +
-                            "<p>" + e.event_start_time + "</p>" +
-                            "<p>" + e.ticket_price + "</p>" + // Add ticket price or any other attributes you want to display
-                            "</div>";
+                    var eventsHTML = "<table>" +
+                      "<thead>" +
+                      "<tr>" +
+                      "<th>Event Name</th>" +
+                      "<th>Event Category</th>" +
+                      "<th>Event Date</th>" +
+                      "<th>Event Start Time</th>" +
+                      "<th>Event End Time</th>" +
+                      "<th>Ticket Price</th>" +
+                      "<th>Seats Left</th>" +
+                      "<th>Room</th>" +
+                      "<!-- Add more table headers as needed -->" +
+                      "</tr>" +
+                      "</thead>" +
+                      "<tbody>";
 
-                        var linkHTML = "<p>" +
-                            "<a href='/events/" + e.id + "'>Show this event</a>" +
-                            "</p>";
+                    events.forEach(function(event) {
+                        if (current_user.is_admin)
+                        {
+                            var eventHTML = "<tr>" +
+                              "<td>" + event.event_name + "</td>" +
+                              "<td>" + event.event_date + "</td>" +
+                              "<td>" + event.event_category + "</td>" +
+                              "<td>" + event.event_start_time + "</td>" +
+                              "<td>" + event.event_end_time + "</td>" +
+                              "<td>" + event.ticket_price + "</td>" +
+                              "<td>" + event.number_of_seats_left + "</td>" +
+                              "<td>" + Room.find(event.room_id).room_location + "</td>" +
+                              "<td colspan='2'>" +
+                              "<a href='/events/" + event.id + "'>Show this event</a>" +
+                              "</td>" +
+                              "</tr>";
+                        }
+                        else
+                        {
+                            var event_date = event.event_date;
+                            var current_date = Time.current.utc.to_date
+                            var event_time = event.event_start_time.strftime("%H:%M")
+                            var current_time = Time.current.strftime("%H:%M")
+                            if((event.number_of_seats_left > 0) && ((event_date > current_date) || (event_date == current_date && event_time > current_time)))
+                            {
+                                var eventHTML = "<tr>" +
+                                  "<td>" + event.event_name + "</td>" +
+                                  "<td>" + event.event_date + "</td>" +
+                                  "<td>" + event.event_category + "</td>" +
+                                  "<td>" + event.event_start_time + "</td>" +
+                                  "<td>" + event.event_end_time + "</td>" +
+                                  "<td>" + event.ticket_price + "</td>" +
+                                  "<td>" + event.number_of_seats_left + "</td>" +
+                                  "<td>" + Room.find(event.room_id).room_location + "</td>" +
+                                  "<td colspan='2'>" +
+                                  "<a href='/events/" + event.id + "'>Show this event</a>" +
+                                  "</td>" +
+                                  "</tr>";
+                            }
+                            else
+                            {}
+                        }
 
-                        eventsHTML += eventHTML + linkHTML;
+                        eventsHTML += eventHTML;
                     });
-                    // Update events container with filtered events HTML
+
+                    eventsHTML += "</tbody>" +
+                      "</table>";
+
                     document.getElementById("events").innerHTML = eventsHTML;
                 }
             };
             xhr.send();
+
+            // xhr.setRequestHeader("Accept", "application/json");
+            // xhr.onreadystatechange = function() {
+            //     if (xhr.readyState === 4 && xhr.status === 200) {
+            //         var events = JSON.parse(xhr.responseText);
+            //         var eventsHTML = "";
+            //         // Generate HTML for filtered events
+            //         // Generate HTML for filtered events
+            //
+            //         events.forEach(function(event) {
+            //
+            //             var eventHTML = "<div>" +
+            //                 "<p>" + e.event_name + "</p>" +
+            //                 "<p>" + e.event_start_time + "</p>" +
+            //                 "<p>" + e.ticket_price + "</p>" + // Add ticket price or any other attributes you want to display
+            //                 "</div>";
+            //
+            //             var linkHTML = "<p>" +
+            //                 "<a href='/events/" + e.id + "'>Show this event</a>" +
+            //                 "</p>";
+            //
+            //             eventsHTML += eventHTML + linkHTML;
+            //         });
+            //         // Update events container with filtered events HTML
+            //         document.getElementById("events").innerHTML = eventsHTML;
+            //     }
+            // };
+            // xhr.send();
         });
     });
 </script>

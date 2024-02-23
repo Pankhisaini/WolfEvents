@@ -1,20 +1,33 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @event %>
+<div>
+  <p><strong>Event Name:</strong> <%= @event.event_name %></p>
+  <p><strong>Event Category:</strong> <%= @event.event_category %></p>
+  <p><strong>Event Date:</strong> <%= @event.event_date %></p>
+  <p><strong>Event Start Time:</strong> <%= @event.event_start_time.strftime('%H:%M') %></p>
+  <p><strong>Event End Time:</strong> <%= @event.event_end_time.strftime('%H:%M')  %></p>
+  <p><strong>Ticket Price:</strong> <%= @event.ticket_price %></p>
+  <p><strong>Number of Seats Left:</strong> <%= @event.number_of_seats_left %></p>
+  <p><strong>Room:</strong> <%= Room.find_by_id(@event.room_id).room_location %></p>
+</div>
+
 
 <div>
-  <% unless @event.event_date < Date.today || (@event.event_date == Date.today && @event.event_start_time <= Time.now)|| @event.number_of_seats_left <= 0 %>
-  <%= link_to "Book tickets", new_ticket_path(event_id: @event.id, user_id: current_user.id, room_id: @event.room.id) %>
-    <%end %>
-  <% unless !current_user.is_admin? %>
-  <%= link_to "Edit this event", edit_event_path(@event) %> |
-  <%end %>
-
-  <%= link_to "Back to events", events_path %>
-  <% unless !current_user.is_admin? %>
-
-
+  <% unless @event.event_date < Time.current.utc.to_date  || (@event.event_date == Time.current.utc.to_date  && @event.event_start_time.strftime("%H:%M") <= Time.current.strftime("%H:%M") )|| @event.number_of_seats_left <= 0 %>
+  <%= link_to "Book tickets", new_ticket_path(event_id: @event.id, user_id: current_user.id, room_id: @event.room.id,belongs_to: current_user.id) %>
+    <%= link_to "Book for others", new_ticket_path(event_id: @event.id, room_id: @event.room.id) %>
+<%end %>
+  <br><br>
+  <div class="d-flex justify-content-between">
+    <% unless !current_user.is_admin? %>
+      <%= link_to "Edit this event", edit_event_path(@event) %> |
+    <% end %>
+    <%= link_to "Back to events", events_path %>
+    <% unless !current_user.is_admin? %>
+      <!-- Add any additional links for admin users if needed -->
+    <% end %>
+  </div>
 
   <%= button_to "Destroy this event", @event, method: :delete %>
-    <%end %>
+
 </div>

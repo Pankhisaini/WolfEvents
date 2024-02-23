@@ -19,13 +19,13 @@ class EventsController < ApplicationController
       @events = @events.where(event_date: params[:date])
     end
 
-    if params[:min_price].present?
-      min_price = params[:min_price].to_i
+    if params[:minPrice].present?
+      min_price = params[:minPrice].to_i
       @events = @events.where('ticket_price >= ?', min_price)
     end
 
-    if params[:max_price].present?
-      min_price = params[:max_price].to_i
+    if params[:maxPrice].present?
+      min_price = params[:maxPrice].to_i
       @events = @events.where('ticket_price <= ?', min_price)
     end
     #puts @events[0].event_name
@@ -39,15 +39,24 @@ class EventsController < ApplicationController
   # GET /events/1 or /events/1.json
   def show
     @event = Event.find(params[:id])
+    if !current_user.is_admin? && (@event.event_date < Time.now.utc.to_date || (@event.event_date==Time.now.utc.to_date  && @event.event_start_time.strftime('%H:%M') < Time.current.strftime('%H:%M') || @event.number_of_seats_left <= 0))
+      redirect_to root_url
+    end
   end
 
   # GET /events/new
   def new
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
     @event = Event.new
   end
 
   # GET /events/1/edit
   def edit
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
   end
 
   # POST /events or /events.json
@@ -80,6 +89,9 @@ class EventsController < ApplicationController
 
   # DELETE /events/1 or /events/1.json
   def destroy
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
     @event.destroy!
 
     respond_to do |format|
@@ -87,6 +99,12 @@ class EventsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+ 
+  # def search
+  #   @event = Event.find_by(name: params[:event_name])
+  #   @events = Event.where("event_name LIKE ?", "%#{@event_name}%")
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.

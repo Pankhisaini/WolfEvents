@@ -10,7 +10,7 @@
       </ul>
     </div>
   <% end %>
-
+  <span style="color: red;">NOTE: The time you enter for creating an event will be stored in UTC (and not localtime EST). So create a future event considering the current UTC time (EST +05:00 hours)<br>Eg: For creating an event of 16:30 EST, enter 21:30 in Event start time</span>
   <div>
     <%= form.label :event_name, style: "display: block" %>
     <%= form.text_field :event_name %>
@@ -23,9 +23,8 @@
 
   <div>
     <%= form.label :event_date, style: "display: block" %>
-    <%= form.date_field :event_date, id: "event_date"%>
+    <%= form.date_field :event_date, id: "event_date", min: Time.current.utc.to_date%>
   </div>
-
   <div>
     <%= form.label :event_start_time, style: "display: block" %>
     <%= form.time_field :event_start_time, id: "event_start_time"%>

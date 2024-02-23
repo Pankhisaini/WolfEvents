@@ -3,21 +3,33 @@ class RoomsController < ApplicationController
 
   # GET /rooms or /rooms.json
   def index
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
     @rooms = Room.all
   end
 
 
   # GET /rooms/1 or /rooms/1.json
   def show
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
   end
 
   # GET /rooms/new
   def new
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
     @room = Room.new
   end
 
   # GET /rooms/1/edit
   def edit
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
   end
 
   # POST /rooms or /rooms.json

@@ -15,10 +15,13 @@
   </p>
 
   <p>
-    <strong>User:</strong>
+    <strong>Booked By:</strong>
     <%= ticket.user.name %>
   </p>
-
+  <p>
+    <strong>Belongs to:</strong>
+    <%= User.find_by_id(ticket.belongs_to).name %>
+  </p>
   <p>
     <strong>Number of Tickets:</strong>
     <%= ticket.number_of_tickets %>

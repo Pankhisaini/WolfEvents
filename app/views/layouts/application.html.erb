@@ -12,21 +12,18 @@
   </head>
   <body>
   <h1>Wolf Events</h1>
-  <%if current_user %>
+  <% if current_user %>
     Logged in as <%= current_user.name %><br>
-  <%end %>
+    <%= link_to "Home", root_url, class: "btn btn-primary" %> |
+    <%= link_to "Logout", logout_path, class: "btn btn-danger" %><br><br>
+  <% end %>
   <%= yield %>
-  <%if current_user %>
-    <br><br><br><br>
-    <%= link_to "Home",root_url %> |
-    <%= link_to "Logout",logout_path %><br>
-
-  <%end %>
-    <% flash.each do |type, message| %>
-    <div class="alert alert-<%= type %>">
-      <%= message %>
+    <div class="flash">
+      <% flash.each do |message_type, message| %>
+        <div class="alert alert-<%= message_type %>">
+          <%= message %>
+        </div>
+      <% end %>
     </div>
-
-    <% end %>
   </body>
 </html>
