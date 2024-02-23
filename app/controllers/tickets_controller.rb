@@ -8,8 +8,6 @@ class TicketsController < ApplicationController
     else
       @tickets = current_user.tickets
     end
-    # Regular user view (own bookings)
-    # @tickets = current_user.tickets
   end
 
   def my_bookings
@@ -66,16 +64,18 @@ class TicketsController < ApplicationController
 
   # GET /tickets/new
   def new
-    # if current_user.id != params[:user_id].to_i || (@event.event_date < Date.today || (@event.event_date == Date.today && @event.event_start_time < Time.now))
-    #   redirect_to root_url
-    # end
     @event = Event.find(params[:event_id])
-    @confirmation_number = SecureRandom.random_number(1_000..9_999)
-    @room = Room.find_by_id(@event.room_id)
-    @ticket = Ticket.new
-    if !params[:user_id].present?
-      @users=User.all
-      render :other
+    if (@event.number_of_seats_left<=0 || @event.event_date < Time.current.utc.to_date || (@event.event_date == Time.current.utc.to_date && @event.event_start_time.strftime("%H:%M") < Time.current.strftime("%H:%M")))
+      redirect_to root_url
+    else
+      @event = Event.find(params[:event_id])
+      @confirmation_number = SecureRandom.random_number(1_000..9_999)
+      @room = Room.find_by_id(@event.room_id)
+      @ticket = Ticket.new
+      if !params[:user_id].present?
+        @users=User.all
+        render :other
+      end
     end
 
 
@@ -89,11 +89,9 @@ class TicketsController < ApplicationController
 
   # POST /tickets or /tickets.json
   def create
-    puts params
     @ticket = Ticket.new(ticket_params)
     @event = Event.find(params[:ticket][:event_id])
     @ticket.update(confirmation_number: generate_confirmation_number)
-    puts params[:ticket][:number_of_tickets]
     if params[:ticket][:user_email_search].present?
       @other_user = User.find_by(email:params[:ticket][:user_email_search])
       @ticket.update(belongs_to: @other_user.id)
@@ -104,7 +102,6 @@ class TicketsController < ApplicationController
         format.html { redirect_to ticket_url(@ticket), notice: "Ticket was successfully created." }
         format.json { render :show, status: :created, location: @ticket }
       else
-        puts "dont save"
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @ticket.errors, status: :unprocessable_entity }
       end

@@ -82,8 +82,7 @@
           <td colspan="2">
             <%= link_to "Show", event %>
           </td>
-          <!-- Add more table cells with event information -->
-        </tr>
+
       <% else %>
         <% event_date = event.event_date %>
         <% current_date = Time.current.utc.to_date  %>
@@ -122,11 +121,7 @@
             var minPrice = document.getElementById("minPrice").value;
             var maxPrice = document.getElementById("maxPrice").value;
             var name = document.getElementById("name").value;
-            console.log(category);
-            console.log(date);
-            console.log(minPrice);
-            console.log(maxPrice);
-            console.log(name);
+
             // Send AJAX request to fetch filtered events
             var xhr = new XMLHttpRequest();
             var url = "<%= events_path %>?category=" + encodeURIComponent(category) + "&date=" + encodeURIComponent(date) + "&min_price=" + encodeURIComponent(minPrice) + "&max_price=" + encodeURIComponent(maxPrice)+ "&name=" + encodeURIComponent(name);
@@ -205,33 +200,6 @@
             };
             xhr.send();
 
-            // xhr.setRequestHeader("Accept", "application/json");
-            // xhr.onreadystatechange = function() {
-            //     if (xhr.readyState === 4 && xhr.status === 200) {
-            //         var events = JSON.parse(xhr.responseText);
-            //         var eventsHTML = "";
-            //         // Generate HTML for filtered events
-            //         // Generate HTML for filtered events
-            //
-            //         events.forEach(function(event) {
-            //
-            //             var eventHTML = "<div>" +
-            //                 "<p>" + e.event_name + "</p>" +
-            //                 "<p>" + e.event_start_time + "</p>" +
-            //                 "<p>" + e.ticket_price + "</p>" + // Add ticket price or any other attributes you want to display
-            //                 "</div>";
-            //
-            //             var linkHTML = "<p>" +
-            //                 "<a href='/events/" + e.id + "'>Show this event</a>" +
-            //                 "</p>";
-            //
-            //             eventsHTML += eventHTML + linkHTML;
-            //         });
-            //         // Update events container with filtered events HTML
-            //         document.getElementById("events").innerHTML = eventsHTML;
-            //     }
-            // };
-            // xhr.send();
         });
     });
 </script>
