@@ -3,7 +3,6 @@ class ReviewsController < ApplicationController
 
   # GET /reviews or /reviews.json
   def index
-    puts "Yes yes All mei hoon"
     @reviews = Review.all
     # Filter by user email if user_email_search parameter is present
     if params[:user_email_search].present?
@@ -24,22 +23,9 @@ class ReviewsController < ApplicationController
         # Filter reviews by event IDs
       @reviews = @reviews.where(event_id: event_ids)
     end
-
-    # Filter by event name if event_name_search parameter is present
-    # if params[:event_name_search].present?
-    #   search_term = "%#{params[:event_name_search]}%"
-    #   @events = Event.where('event_name LIKE ?', search_term)
-    #   event_ids = @events.pluck(:id)
-    #
-    #   # Filter reviews by event IDs
-    #   @reviews = @reviews.where(event_id: event_ids)
-    # end
 end
 
   def my_reviews
-    puts "hihih"
-    puts params[:id]
-    puts current_user.id
     if current_user.id != params[:id].to_i
       redirect_to root_url
     end
@@ -57,12 +43,9 @@ end
 
   # GET /reviews/new
   def new
-    puts "new mei hoon"
-    puts params
     @event = Event.find_by_id(params[:event_id])
     @user = User.find_by_id(params[:user_id])
     @current_tickets = current_user.tickets
-    # @params_tickets = @user.tickets
     size = @current_tickets.where(event_id: @event.id).count
 
     if ((current_user.id != params[:user_id].to_i) || size == 0 || (@event.event_date > Date.today || ( @event.event_date == Date.today && @event.event_start_time > Time.now)))

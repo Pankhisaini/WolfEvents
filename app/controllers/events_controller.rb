@@ -3,10 +3,7 @@ class EventsController < ApplicationController
 
   # GET /events or /events.json
   def index
-    puts "In Index"
-    puts params
     @events = Event.all
-    #@room = Room.find_by_id(1)
     if params[:name].present?
       @events = @events.where('LOWER(event_name) LIKE ?', "%#{params[:name].downcase}%")
     end
@@ -62,7 +59,6 @@ class EventsController < ApplicationController
   # POST /events or /events.json
   def create
     @event = Event.new(event_params)
-    puts event_params
     respond_to do |format|
       if @event.save
         format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
@@ -99,12 +95,6 @@ class EventsController < ApplicationController
       format.json { head :no_content }
     end
   end
-
- 
-  # def search
-  #   @event = Event.find_by(name: params[:event_name])
-  #   @events = Event.where("event_name LIKE ?", "%#{@event_name}%")
-  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -74,6 +74,7 @@ class TicketsController < ApplicationController
     @room = Room.find_by_id(@event.room_id)
     @ticket = Ticket.new
     if !params[:user_id].present?
+      @users=User.all
       render :other
     end
 
@@ -94,10 +95,7 @@ class TicketsController < ApplicationController
     @ticket.update(confirmation_number: generate_confirmation_number)
     puts params[:ticket][:number_of_tickets]
     if params[:ticket][:user_email_search].present?
-      puts "Pohoch gayaa"
       @other_user = User.find_by(email:params[:ticket][:user_email_search])
-      puts "Check"
-      puts @other_user.name
       @ticket.update(belongs_to: @other_user.id)
     end
     respond_to do |format|

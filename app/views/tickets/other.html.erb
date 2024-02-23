@@ -1,7 +1,7 @@
 <%= form_with(model: @ticket, url: tickets_path, local: true) do |form| %>
   <div class="form-group">
     <%= form.label :user_email_search, "Enter email id:" %>
-    <%= form.text_field :user_email_search, id: 'user_email_search', value: params[:user_email_search]%>
+    <%= form.text_field :user_email_search, id: 'user_email_search', value: params[:user_email_search], onchange: 'handleEmailSearch()'%>
   </div>
   <div class="field">
     <strong>Event:</strong> <%= @event.event_name %>
@@ -31,7 +31,7 @@
     <%= form.text_field :total_price, value: @event.ticket_price,:id => 'total_price', :readonly => true %>
   </div>
   <div class="actions">
-    <%= form.submit "Purchase Tickets" %>
+    <%= form.submit "Purchase Tickets", id:"submit_button" %>
   </div>
 <% end %>
 
@@ -41,3 +41,64 @@
         document.getElementById('total_price').value = document.getElementById('quantity').value * price;
     }
 </script>
+
+<!--<script>-->
+<!--    function handleEmailSearch() {-->
+<!--        const userEmailSearchInput = document.getElementById('user_email_search');-->
+<!--        const enteredValue = userEmailSearchInput.value;-->
+<!--        console.log('Value entered:', enteredValue);-->
+<!--        const url = '/users?show=1';-->
+<!--        fetch(url)-->
+<!--            .then(response => {-->
+<!--                if (!response.ok) {-->
+<!--                    throw new Error('Failed to fetch users');-->
+<!--                }-->
+<!--                return response.json();-->
+<!--            })-->
+<!--            .then(users => {-->
+<!--                console.log('Users:', users);-->
+<!--                // Do something with the users data-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                console.error('Error:', error);-->
+<!--            });-->
+<!--        // You can perform further actions with the entered value here-->
+<!--    }-->
+<!--</script>-->
+<script>
+    function handleEmailSearch() {
+
+        const userEmailSearchInput = document.getElementById('user_email_search');
+        const enteredValue = userEmailSearchInput.value;
+        console.log('Value entered:', enteredValue);
+        const url = '/users?show=1';
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch users');
+                }
+                return response.json();
+            })
+            .then(users => {
+                console.log('Users:', users);
+                // Check if any user has the entered email
+                const userFound = users.some(user => user.email === enteredValue);
+                if (!userFound) {
+                    // Show alert if user not found
+                    alert('User with entered email not found');
+                    // Disable submit button
+                    document.getElementById('submit_button').disabled = true;
+                }
+                else
+                {
+                    document.getElementById('submit_button').disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        // You can perform further actions with the entered value here
+    }
+</script>
+
+
